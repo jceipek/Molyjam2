@@ -1,0 +1,34 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Code/CMJ2Plane.cs">
+    <Files>
+      <File FileName="Assets/Code/CCellSprite.cs" Line="1" Column="1" />
+      <File FileName="Assets/Code/CObjectCreator.cs" Line="37" Column="5" />
+      <File FileName="Assets/Code/CAudioManager.cs" Line="50" Column="70" />
+      <File FileName="Assets/Code/CMJ2Manager.cs" Line="8" Column="5" />
+      <File FileName="Assets/Code/CMJ2Tile.cs" Line="5" Column="1" />
+      <File FileName="Assets/Code/CMJ2Hero.cs" Line="7" Column="12" />
+      <File FileName="Assets/Code/CMJ2Plane.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Assembly-CSharp" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Code" expanded="True">
+                <Node name="CMJ2Tile.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
