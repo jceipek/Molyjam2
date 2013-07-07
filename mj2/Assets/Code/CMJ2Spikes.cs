@@ -7,6 +7,8 @@ public class CMJ2Spikes : CMJ2Tile
 	{
 		if (!col.isTrigger)
 			print("Spikes collided with " + col.name);
+		else
+			return;
 			
 		if (col.gameObject.layer == CMJ2Manager.LAYER_HERO)
 		{
