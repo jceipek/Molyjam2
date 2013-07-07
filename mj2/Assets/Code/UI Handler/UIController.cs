@@ -30,6 +30,31 @@ public class UIController : MonoBehaviour {
 		return transformedPoint;
 	}
 
+	public bool IsCellPartOfLevel (Vector2 pos) {
+		return (pos.x >= 0 && pos.y >= 0 &&
+			    pos.x < m_UIProperties.levelDims.x &&
+			    pos.y < m_UIProperties.levelDims.y);
+	}
+
+	public bool IsCellPartOfInterfacePanel (Vector2 pos) {
+		//TODO
+		Vector2 distFromLevel = new Vector2();
+		distFromLevel.x = m_UIProperties.interfacePanelOrigin.position.x;
+		distFromLevel.x -= gameObject.transform.position.x;
+		distFromLevel.y = m_UIProperties.interfacePanelOrigin.position.y;
+		distFromLevel.y -= gameObject.transform.position.y;
+
+		Vector2 posOffset = pos - distFromLevel;
+
+		return (posOffset.x >= 0 && posOffset.y >= 0 &&
+			    posOffset.x < m_UIProperties.interfacePanelDims.x &&
+			    posOffset.y < m_UIProperties.interfacePanelDims.y);
+	}
+
+	public bool IsCellPartOfInterface (Vector2 pos) {
+		return IsCellPartOfLevel(pos) || IsCellPartOfInterfacePanel(pos);
+	}
+
 	public bool DoesCellContainObject (Vector2 pos) {
 		return (DoesCellContainPlayerPlacedObject(pos) || DoesCellContainOriginalObject(pos));
 	}
@@ -122,7 +147,10 @@ public class UIController : MonoBehaviour {
  				print ("Filled");
  			} else {
  				print ("Empty");
- 				UIController.g.CreateDebugObjectAtCell(MapPointToSquare (Input.mousePosition));
+ 				if (IsCellPartOfInterface(MapPointToSquare (Input.mousePosition))) {
+ 					UIController.g.CreateDebugObjectAtCell(MapPointToSquare (Input.mousePosition));	
+ 				}
+ 				
  			}
  			
             /*Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
