@@ -8,7 +8,7 @@ public class UIProperties : MonoBehaviour {
 	public Transform interfacePanelOrigin;
 
 	void OnDrawGizmos () {
- 		Gizmos.color = Color.black;
+ 		Gizmos.color = Color.white;
 
  		Vector3 bounds = new Vector3 (levelDims.x, levelDims.y, 1);
  		Vector3 anchor = new Vector3 (levelDims.x/2f - 0.5f, levelDims.y/2f - 0.5f, 1f);
