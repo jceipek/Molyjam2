@@ -9,6 +9,7 @@ public class CMJ2Manager : MonoBehaviour
 	public const int LAYER_LADDER = 10;
 	public const int LAYER_SPIKE = 11;
 	public const int LAYER_GATE = 12;
+	public const int LAYER_DIRECTIVE = 16;	
 		
 	public const int MASK_ALL_GROUND = (1 << LAYER_GROUND) | (1 << LAYER_SPIKE);
 	public const int MASK_ALL_TRIGGERS = (1 << LAYER_LADDER) | (1 << LAYER_GATE);
