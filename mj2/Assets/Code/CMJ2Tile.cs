@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class CMJ2Tile : MonoBehaviour 
 {
+	public bool m_moveable = false;
+	
 	public Vector2 dims;
 	//public Vector2 cellAnchor;
 
@@ -22,13 +24,27 @@ public class CMJ2Tile : MonoBehaviour
 	}
 
 	void Start () {
-		List<string> positions = this.EnumeratePositions();
-		foreach (string pos in positions) {
-			if (!UIController.g.originalObjects.ContainsKey(pos)) {
-				UIController.g.originalObjects.Add(pos, new List<GameObject>());
-				print ("Added list");
+		if (m_moveable)
+		{
+			List<string> positions = this.EnumeratePositions();
+			foreach (string pos in positions) {
+				if (!UIController.g.playerPlacedObjects.ContainsKey(pos)) {
+					UIController.g.playerPlacedObjects.Add(pos, new List<GameObject>());
+					//print ("Added list");
+				}
+				UIController.g.playerPlacedObjects[pos].Add(gameObject);
 			}
-			UIController.g.originalObjects[pos].Add(gameObject);
+		}	
+		else
+		{
+			List<string> positions = this.EnumeratePositions();
+			foreach (string pos in positions) {
+				if (!UIController.g.originalObjects.ContainsKey(pos)) {
+					UIController.g.originalObjects.Add(pos, new List<GameObject>());
+					//print ("Added list");
+				}
+				UIController.g.originalObjects[pos].Add(gameObject);
+			}
 		}
 	}
 

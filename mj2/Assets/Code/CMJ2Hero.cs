@@ -135,8 +135,12 @@ public class CMJ2Hero : MonoBehaviour
 	IEnumerator Start () 
     {
     	changeState(CMJ2HeroState.IDLE);
-    	yield return new WaitForSeconds(1f);
     	setDir(1f);
+    	yield return new WaitForSeconds(3f);
+    	setDir(-1f);
+    	yield return new WaitForSeconds(3f);
+    	setDir(1f);
+    	yield return new WaitForSeconds(3f);
     	changeState(CMJ2HeroState.WALK);
         //yield return new WaitForSeconds(1.5f);
         //changeState(CMJ2HeroState.JUMP);
@@ -154,7 +158,7 @@ public class CMJ2Hero : MonoBehaviour
 				print("Directive " + cdirective.name + " met!");
 				cdirective.complete();
 				
-				CMJ2Manager.g.directiveComplete(cdirective);				
+				CMJ2Level.g.directiveComplete(cdirective);				
 			}
 		}
     	
@@ -357,7 +361,7 @@ public class CMJ2Hero : MonoBehaviour
 	    	m_onGround = hitlayer == CMJ2Manager.LAYER_GROUND;
 	    	
 	    	if (m_onGround && !wasonground && 
-	    		m_state != CMJ2HeroState.CLIMB &&
+	    		m_state != CMJ2HeroState.CLIMB && m_state != CMJ2HeroState.IDLE &&
 	    		m_spriteAnim.currentAnimationName != "walk")
 	    	{
 	    		print("re-walk");	
@@ -407,7 +411,7 @@ public class CMJ2Hero : MonoBehaviour
 	    	int newwayup = vely > 1f ? 1 : vely < -1f ? -1 : 0;
 	    	
 	    	//// DEBUG
-	    	if (m_wayUp >= 0 && newwayup < 0)
+	    	if (m_wayUp >= 0 && newwayup < 0 && m_state != CMJ2HeroState.IDLE)
 	    	{
 	    		//Debug.DrawLine(m_lowRaycastPoint.position + new Vector3 (-1f, -0.5f), m_lowRaycastPoint.position + new Vector3 (1, -0.5f), Color.blue, 10f);
 	    		
