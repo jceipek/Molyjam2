@@ -37,7 +37,6 @@ public class UIController : MonoBehaviour {
 	}
 
 	public bool IsCellPartOfInterfacePanel (Vector2 pos) {
-		//TODO
 		Vector2 distFromLevel = new Vector2();
 		distFromLevel.x = m_UIProperties.interfacePanelOrigin.position.x;
 		distFromLevel.x -= gameObject.transform.position.x;
@@ -89,6 +88,11 @@ public class UIController : MonoBehaviour {
 
 	public bool CanPlaceAt (GameObject obj, Vector2 pos) {
 		// TODO: Add special cases for objects that must be placed on the ground
+
+		if (IsCellPartOfInterface(pos)) {
+			return false;
+		}
+
 		switch (obj.layer)
 		{
 		    case CMJ2Manager.LAYER_GROUND: 
