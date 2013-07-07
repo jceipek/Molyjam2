@@ -107,6 +107,8 @@ public class CMJ2Hero : MonoBehaviour
     				
     				if (m_blood)
 	    				m_blood.Play();
+	    				
+	    			CMJ2Manager.g.restartAfterDelay();
     			break;
     		}
     		
@@ -136,11 +138,11 @@ public class CMJ2Hero : MonoBehaviour
     {
     	changeState(CMJ2HeroState.IDLE);
     	setDir(1f);
-    	yield return new WaitForSeconds(3f);
+    	yield return new WaitForSeconds(2f);
     	setDir(-1f);
-    	yield return new WaitForSeconds(3f);
+    	yield return new WaitForSeconds(2f);
     	setDir(1f);
-    	yield return new WaitForSeconds(3f);
+    	yield return new WaitForSeconds(2f);
     	changeState(CMJ2HeroState.WALK);
         //yield return new WaitForSeconds(1.5f);
         //changeState(CMJ2HeroState.JUMP);
@@ -207,6 +209,7 @@ public class CMJ2Hero : MonoBehaviour
     public void doorClosed ()
     {
     	m_sprite.renderer.enabled = false;
+    	CMJ2Manager.g.nextAfterDelay();
     }
     
     void makeJump ()

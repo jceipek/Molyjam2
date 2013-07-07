@@ -40,5 +40,30 @@ public class CMJ2Manager : MonoBehaviour
 	{
 		m_scoreText.text = now + " / " + total;
 	}
+	
+	public void restartAfterDelay ()
+	{
+		Invoke("restart", 3f);
+	}
+	public void nextAfterDelay ()
+	{
+		Invoke("next", 3f);
+	}
+	
+	public void restart ()
+	{
+		Application.LoadLevel(Application.loadedLevelName);
+	}
+	
+	public void next ()
+	{
+		Application.LoadLevel(Application.loadedLevel + 1);
+	}
+	
+	void Update ()
+	{
+		if (Input.GetKeyDown(KeyCode.R))
+			restart();
+	}
 
 }

@@ -27,4 +27,12 @@ public class CMJ2Level : MonoBehaviour
 		CMJ2Manager.g.directives(m_directivesComplete, m_directivesTotal);
 	}
 
+	/*void Update ()
+	{
+		if (Input.GetMouseButtonDown(0))
+		{
+			
+		}
+	}*/
+
 }
