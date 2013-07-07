@@ -25,12 +25,12 @@ public class CCollisionDelegate : MonoBehaviour
 			m_delegateToObject.SendMessage("OnCollisionExit", col);
 	}*/
 	
-	void OnTriggerEnter (Collider col) 
+	void OnTriggerStay (Collider col) 
 	{
 		if (m_delegateToObject)
 		{
 			CTwoColliders cols = new CTwoColliders (collider, col);
-			m_delegateToObject.SendMessage("OnTriggerEnterExt", cols);
+			m_delegateToObject.SendMessage("OnTriggerStayExt", cols);
 		}
 	}
 	/*void OnTriggerExit (Collider col) 
