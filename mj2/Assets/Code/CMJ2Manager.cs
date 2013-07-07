@@ -18,10 +18,26 @@ public class CMJ2Manager : MonoBehaviour
     public string m_user = "default";
 
     public static CMJ2Manager g;
+    
+    public int m_directivesComplete = 0;
 
 	void Awake () 
     {
+    	if (g != null)
+    	{
+    		DestroyImmediate(gameObject);
+    		return;
+    	}
+    	
         g = this;
+        
+        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(this);
+	}
+	
+	public void directiveComplete (CMJ2Directive cdir)
+	{
+		m_directivesComplete++;
 	}
 
 }

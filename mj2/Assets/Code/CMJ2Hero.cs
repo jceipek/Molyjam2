@@ -152,7 +152,9 @@ public class CMJ2Hero : MonoBehaviour
 			if (cdirective && cdirective.m_directive == directive)
 			{
 				print("Directive " + cdirective.name + " met!");
-				cdirective.complete();				
+				cdirective.complete();
+				
+				CMJ2Manager.g.directiveComplete(cdirective);				
 			}
 		}
     	
