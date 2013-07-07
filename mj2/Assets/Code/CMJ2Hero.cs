@@ -141,6 +141,22 @@ public class CMJ2Hero : MonoBehaviour
         //yield return new WaitForSeconds(1.5f);
         //changeState(CMJ2HeroState.JUMP);
     }
+    
+    // Search by directive
+    void searchForDirective (CMJ2Directive.CMJ2DirectiveType directive)
+    {
+	   	RaycastHit hitinfo;
+		if (Physics.Raycast(m_xform.position + new Vector3 (0f, 0f, -4f), Vector3.forward, out hitinfo, 5f, 1 << CMJ2Manager.LAYER_DIRECTIVE))
+		{
+			CMJ2Directive cdirective = hitinfo.collider.GetComponent<CMJ2Directive>();
+			if (cdirective && cdirective.m_directive == directive)
+			{
+				print("Directive " + cdirective.name + " met!");
+				cdirective.complete();				
+			}
+		}
+    	
+    }
 
     void execWalk ()
     {
@@ -190,6 +206,9 @@ public class CMJ2Hero : MonoBehaviour
     void makeJump ()
     {
     	print("JUMP");
+    	
+    	searchForDirective(CMJ2Directive.CMJ2DirectiveType.UP);
+    	
     	Vector3 curvel = m_rb.velocity;
         m_rb.velocity = new Vector3 (curvel.x, m_initialJumpVelocity);
 		m_lastJumpTime = Time.time;
@@ -251,12 +270,17 @@ public class CMJ2Hero : MonoBehaviour
 
 	    changeState(CMJ2HeroState.CLIMB);
 	    setVDir(hitlayer == CMJ2Manager.LAYER_LADDER ? 1 : -1);
+	    
+	    if (m_Vdir == 1)
+	    	searchForDirective(CMJ2Directive.CMJ2DirectiveType.UP);
     }
     
     void setDir (float dir)
     {
     	if (dir == m_dir)
     		return;
+    	
+    	searchForDirective(CMJ2Directive.CMJ2DirectiveType.CHG_DIR);
     	
     	print("Direction " + dir);	
     	m_dir = dir;
