@@ -70,6 +70,12 @@ public class CCellSpriteAnimated : CCellSprite
 	}
 	protected Dictionary<string, CAnimationData> m_animations;
 	protected CAnimationData m_currentAnimation;
+	
+	protected string m_currentAnimationName;
+	public string currentAnimationName {
+		get { return m_currentAnimationName; }
+	}		
+
 	protected float m_timeForNextFrame;
 	
 	protected override void Awake ()
@@ -150,6 +156,8 @@ public class CCellSpriteAnimated : CCellSprite
 		if (m_animations == null || 
 		    !m_animations.TryGetValue(anim, out data))
 			return false;
+			
+		m_currentAnimationName = anim;	
 			
 		m_currentAnimation = data;
 		m_currentAnimation.m_currentCellIndex = 0;

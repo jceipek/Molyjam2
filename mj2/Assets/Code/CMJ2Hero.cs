@@ -14,17 +14,21 @@ public class CMJ2Hero : MonoBehaviour
     float m_lastJumpTime;
     
     public /**/ float m_dir = 1f;
+    public /**/ int m_Vdir = 0;
     
     public /**/ bool m_onGround = false;
     public /**/ int m_wayUp = 0;
     
+    public PhysicMaterial m_spikedMaterial;
+    
+    public ParticleSystem m_blood;
+    
     public enum CMJ2HeroState {
-        IDLE = 0,
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN,
-        JUMP,
+    	NONE = 0,
+        IDLE,
+        WALK,
+        CLIMB,
+        SPIKED,
         GATE
     };
     public CMJ2HeroState m_state;
@@ -49,6 +53,8 @@ public class CMJ2Hero : MonoBehaviour
 	public float m_ladderSnapSpeed = 0.025f;
 	
 	public Transform m_sprite;
+//{"walk":{"cells":[64,68,70,72],"loop":true,"freq":0.15},"jump":{"cells":[74,76],"loop":false,"freq":0.3},"fall":{"cells":[78],"loop":false,"freq":0.3},"idle":{"cells":[66],"loop":false,"freq":0.3},"climb":{"cells":[128,130,132,134],"loop":true,"freq":0.15},"spiked":{"cells":[96,98,100,102],"loop":false,"freq":0.15}}
+	CCellSpriteAnimated m_spriteAnim;
 	
 	Quaternion m_quatFlipped;
     protected Transform m_xform;
@@ -68,17 +74,43 @@ public class CMJ2Hero : MonoBehaviour
         m_quatFlipped = Quaternion.Euler(0f, 180f, 0f);
         
         m_origLocPos = m_sprite.localPosition;
+        m_spriteAnim = m_sprite.GetComponent<CCellSpriteAnimated>();
     }
     
-    void changeState (CMJ2HeroState state)
+    public void changeState (CMJ2HeroState state)
     {
     	
     	if (m_state != state)
     	{
 	    	m_prevState = m_state;
     		m_state = state;
-    	   	if (m_state == CMJ2HeroState.UP ||
-    	   		m_state == CMJ2HeroState.DOWN)
+    		
+    		switch (m_state)
+    		{
+    			case CMJ2HeroState.IDLE:
+    				m_spriteAnim.runAnimation("idle");
+    			break;
+    			case CMJ2HeroState.WALK:
+    				m_spriteAnim.runAnimation("walk");
+    			break;
+    			case CMJ2HeroState.CLIMB:
+    				m_spriteAnim.runAnimation("climb");
+    			break;
+    			case CMJ2HeroState.SPIKED:
+    				m_rb.velocity = Vector3.zero;
+    				m_spriteAnim.runAnimation("spiked");
+    				
+    				Collider[] cols = GetComponentsInChildren<Collider>() as Collider[];
+    				foreach (Collider col in cols)
+    					col.sharedMaterial = m_spikedMaterial;
+    				m_rb.useGravity = false;
+    				
+    				if (m_blood)
+	    				m_blood.Play();
+    			break;
+    		}
+    		
+    	   	if (m_state == CMJ2HeroState.CLIMB)
     	   	{
     	   		if (!m_rb.isKinematic)
     	   		{
@@ -102,18 +134,12 @@ public class CMJ2Hero : MonoBehaviour
 	
 	IEnumerator Start () 
     {
+    	changeState(CMJ2HeroState.IDLE);
     	yield return new WaitForSeconds(1f);
-    	changeState(CMJ2HeroState.RIGHT);
+    	setDir(1f);
+    	changeState(CMJ2HeroState.WALK);
         //yield return new WaitForSeconds(1.5f);
         //changeState(CMJ2HeroState.JUMP);
-    }
-
-    void execJump ()
-    {
-    	Vector3 curvel = m_rb.velocity;
-        m_rb.velocity = new Vector3 (curvel.x, m_initialJumpVelocity);
-        m_state = m_prevState;
-        m_lastJumpTime = Time.time;
     }
 
     void execWalk ()
@@ -124,7 +150,7 @@ public class CMJ2Hero : MonoBehaviour
 	    	int hitlayer = -1;
 	    	if (Physics.Raycast(m_lowRaycastPoint.position, new Vector3 (m_dir * m_lowRaycastNorm.x, m_lowRaycastNorm.y), out hitinfo, m_lowRaycastDist, CMJ2Manager.MASK_ALL_GROUND))
 	    		hitlayer = hitinfo.collider.gameObject.layer;
-	    		
+	    			    		
 	    	if (hitlayer != CMJ2Manager.LAYER_GROUND)
 	    		jump(false);
     	}   	
@@ -136,7 +162,7 @@ public class CMJ2Hero : MonoBehaviour
         m_debugVel = m_rb.velocity;///
     }
     
-    void execClimb (float vdir)
+    void execClimb ()
     {
     	float xdistfromcenter = (m_xform.position.x + 1000f) % 1f;
     	if (xdistfromcenter > 0.5f)
@@ -145,7 +171,7 @@ public class CMJ2Hero : MonoBehaviour
     	m_xform.position += new Vector3 (
     		Mathf.Abs(xdistfromcenter) < m_ladderSnapSpeed ? -xdistfromcenter :
     			(Mathf.Sign(xdistfromcenter) * -m_ladderSnapSpeed), 
-    			m_climbSpeed * vdir * Time.deltaTime);    	
+    			m_climbSpeed * (float)m_Vdir * Time.deltaTime);    	
     }
     
     void execGate ()
@@ -161,6 +187,15 @@ public class CMJ2Hero : MonoBehaviour
     	m_sprite.renderer.enabled = false;
     }
     
+    void makeJump ()
+    {
+    	print("JUMP");
+    	Vector3 curvel = m_rb.velocity;
+        m_rb.velocity = new Vector3 (curvel.x, m_initialJumpVelocity);
+		m_lastJumpTime = Time.time;
+		m_spriteAnim.runAnimation("jump");
+    }
+    
     void jump (bool bumped)
     {
     	if (m_onGround && Time.time > m_lastJumpTime + 0.1f)
@@ -170,41 +205,71 @@ public class CMJ2Hero : MonoBehaviour
 
     		if (!bumped)
     		{
-  		    	if (Physics.Raycast(m_xform.position, Vector3.up, out hitinfo, m_centerToTopDist))
+  		    	if (Physics.Raycast(m_xform.position, Vector3.up, out hitinfo, m_centerToTopDist, CMJ2Manager.MASK_ALL_EXCEPT_HERO))
   					hitlayer = hitinfo.collider.gameObject.layer;
 
  		    	if (hitlayer != CMJ2Manager.LAYER_GROUND &&
 					hitlayer != CMJ2Manager.LAYER_SPIKE)
-			    	changeState(CMJ2HeroState.JUMP);
+				{
+			    	//changeState(CMJ2HeroState.JUMP);
+			    	makeJump();
+				}
     		}
     		else
     		{
-		    	if (Physics.Raycast(m_xform.position, Vector3.up, out hitinfo, m_centerToTopDist) ||
-		    		Physics.Raycast(m_hiRaycastPoint.position, new Vector3 (m_dir * m_hiRaycastNorm.x, m_hiRaycastNorm.y), out hitinfo, m_hiRaycastDist))
+		    	if (Physics.Raycast(m_xform.position, Vector3.up, out hitinfo, m_centerToTopDist, 1 << CMJ2Manager.LAYER_GROUND) ||
+		    		Physics.Raycast(m_hiRaycastPoint.position, new Vector3 (m_dir * m_hiRaycastNorm.x, m_hiRaycastNorm.y), out hitinfo, m_hiRaycastDist, 1 << CMJ2Manager.LAYER_GROUND))
 		    	{
 		    		hitlayer = hitinfo.collider.gameObject.layer;
-		    		Debug.DrawLine(m_hiRaycastPoint.position, hitinfo.point, Color.white, 1f);
+		    		//Debug.DrawLine(m_hiRaycastPoint.position, hitinfo.point, Color.white, 1f);
 		    	}
 		    
-		    	if (hitlayer != CMJ2Manager.LAYER_GROUND &&
-					hitlayer != CMJ2Manager.LAYER_SPIKE)
-			    	changeState(CMJ2HeroState.JUMP);
+		    	if (hitlayer != CMJ2Manager.LAYER_GROUND)
+				{
+			    	//changeState(CMJ2HeroState.JUMP);
+			    	makeJump();
+				}			    	
 			    else
+			    {
 			    	// Bump backwards
-			    	changeState(m_dir > 0f ? CMJ2HeroState.LEFT : CMJ2HeroState.RIGHT);
+			    	setDir(-m_dir);
+			    	changeState(CMJ2HeroState.WALK);
+			    }
     		}
     	}
 	    //else
 	    //	print("Not jumping " + m_onGround + " " + (Time.time - m_lastJumpTime));
     }
     
+    void climb ()
+    {
+    	RaycastHit hitinfo;
+    	// Check one cell up
+    	int hitlayer = -1;
+    	if (Physics.Raycast(m_xform.position + new Vector3 (0f, 1f, -4f), Vector3.forward, out hitinfo, 5f, CMJ2Manager.MASK_ALL_EXCEPT_HERO))
+    		hitlayer = hitinfo.collider.gameObject.layer;
+
+	    changeState(CMJ2HeroState.CLIMB);
+	    setVDir(hitlayer == CMJ2Manager.LAYER_LADDER ? 1 : -1);
+    }
+    
     void setDir (float dir)
     {
     	if (dir == m_dir)
     		return;
-    		
+    	
+    	print("Direction " + dir);	
     	m_dir = dir;
     	m_sprite.localRotation = m_dir >= 0f ? Quaternion.identity : m_quatFlipped;
+    }
+
+    void setVDir (int vdir)
+    {
+    	if (vdir == m_Vdir)
+    		return;
+    	
+    	print("VDirection " + vdir);	
+    	m_Vdir = vdir;
     }
 	
 	/*void OnTriggerStay (Collider col)
@@ -214,9 +279,14 @@ public class CMJ2Hero : MonoBehaviour
 		changeState(CMJ2HeroState.UP);
 	}*/
 	
+	
 	void OnTriggerStayExt (CCollisionDelegate.CTwoColliders cols)
 	{
-		//print("Trigger " + cols.mine.name + " " + cols.other.name);
+		//print("Trigger " + cols.mine.name + " " + cols.other.name + " " + m_onGround);
+		
+		if (m_state != CMJ2HeroState.WALK ||
+			!m_onGround)
+			return;
 		
 		int lay = cols.other.gameObject.layer;
 		bool isjump = lay == CMJ2Manager.LAYER_GROUND ||
@@ -225,14 +295,14 @@ public class CMJ2Hero : MonoBehaviour
 		switch (cols.mine.name)
 		{
 			case "leftFloor":
-				if (m_state == CMJ2HeroState.LEFT)
+				if (m_dir < 0f)
 				{
 					if (isjump)
 						jump(true);
 				}
 				break;
 			case "rightFloor":
-				if (m_state == CMJ2HeroState.RIGHT)
+				if (m_dir > 0f)
 				{
 					if (isjump)
 						jump(true);
@@ -243,13 +313,30 @@ public class CMJ2Hero : MonoBehaviour
 
 	void FixedUpdate () 
     {
-    	if (m_inGate == null)
+    	if (m_state != CMJ2HeroState.GATE && m_state != CMJ2HeroState.SPIKED)
 		{
 	    	RaycastHit hitinfo;
 	    	int hitlayer = -1;
 	    	if (Physics.Raycast(m_underRaycastPoint.position + new Vector3 (0f, 0f, -4f), Vector3.forward, out hitinfo, 5f, CMJ2Manager.MASK_ALL_GROUND))
 	    		hitlayer = hitinfo.collider.gameObject.layer;
+	    	
+	    	/*if (hitlayer == CMJ2Manager.LAYER_SPIKE)
+	    	{
+	    		changeState(CMJ2HeroState.SPIKED);
+	    		return;
+	    	}*/
+	    	
+	    	bool wasonground = m_onGround;
+	    		
 	    	m_onGround = hitlayer == CMJ2Manager.LAYER_GROUND;
+	    	
+	    	if (m_onGround && !wasonground && 
+	    		m_state != CMJ2HeroState.CLIMB &&
+	    		m_spriteAnim.currentAnimationName != "walk")
+	    	{
+	    		print("re-walk");	
+	    		m_spriteAnim.runAnimation("walk");
+	    	}
 	
 			// Ladder? *** when on ladder, look for ANY collider to continue climbing
 			hitlayer = -1;
@@ -271,25 +358,35 @@ public class CMJ2Hero : MonoBehaviour
 				}
 				else if (hitlayer == CMJ2Manager.LAYER_LADDER)
 				{
-					if (m_state != CMJ2HeroState.UP &&
-						m_state != CMJ2HeroState.DOWN)
-						changeState(CMJ2HeroState.UP);
+					float posxoncol = hitinfo.transform.InverseTransformPoint(hitinfo.point).x;
+					
+					if (m_state != CMJ2HeroState.CLIMB)
+					{
+						if ((m_dir > 0 && posxoncol < -0.01f) ||
+							(m_dir < 0 && posxoncol > 0.01f))
+							climb();
+					}
 				}
 			}
 			else
 			{
-				if (!m_onGround && 
-					(m_state == CMJ2HeroState.UP ||
-					 m_state == CMJ2HeroState.DOWN))
-					 changeState(m_dir > 0f ? CMJ2HeroState.RIGHT : CMJ2HeroState.LEFT);
+				// Continue climbing until out of ground completely if ladder is absent
+				if (!Physics.Raycast(m_xform.position + new Vector3 (0f, 1f, -4f), Vector3.forward, out hitinfo, 5f, CMJ2Manager.MASK_ALL_GROUND) &&
+					!m_onGround && 
+					m_state == CMJ2HeroState.CLIMB)
+					 changeState(CMJ2HeroState.WALK);
 			}
 	    	
 	    	float vely = m_rb.velocity.y;
 	    	int newwayup = vely > 1f ? 1 : vely < -1f ? -1 : 0;
 	    	
 	    	//// DEBUG
-	    	if (m_wayUp > 0 && newwayup < 0)
-	    		Debug.DrawLine(m_lowRaycastPoint.position + new Vector3 (-1f, -0.5f), m_lowRaycastPoint.position + new Vector3 (1, -0.5f), Color.blue, 10f);
+	    	if (m_wayUp >= 0 && newwayup < 0)
+	    	{
+	    		//Debug.DrawLine(m_lowRaycastPoint.position + new Vector3 (-1f, -0.5f), m_lowRaycastPoint.position + new Vector3 (1, -0.5f), Color.blue, 10f);
+	    		
+	    		m_spriteAnim.runAnimation("fall");
+	    	}
 	    	if (newwayup != 0)
 		    	m_wayUp = newwayup;
 		}
@@ -299,26 +396,14 @@ public class CMJ2Hero : MonoBehaviour
             case CMJ2HeroState.IDLE:
                 break;
 
-            case CMJ2HeroState.RIGHT:
-            	setDir(1f);
-                execWalk();
-                break;
-            case CMJ2HeroState.LEFT:
-            	setDir(-1f);
+            case CMJ2HeroState.WALK:
                 execWalk();
                 break;
                 
-            case CMJ2HeroState.UP:
-            	execClimb(1f);
-            	break;
-            case CMJ2HeroState.DOWN:
-            	execClimb(-1f);
+            case CMJ2HeroState.CLIMB:
+            	execClimb();
             	break;
 
-            case CMJ2HeroState.JUMP:
-                execJump();
-                break;
-                
             case CMJ2HeroState.GATE:
             	execGate();
             	break;
