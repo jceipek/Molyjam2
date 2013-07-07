@@ -4,6 +4,8 @@ using System.Collections;
 public class CMJ2Hero : MonoBehaviour 
 {
 
+	public bool debugActive = false;
+
     public float m_targetVelocity = 4f;
     public float m_initialJumpVelocity = 6f;
     public float m_accel = 0.05f;
@@ -95,7 +97,7 @@ public class CMJ2Hero : MonoBehaviour
     	   		}
     	   	}
     	   	
-  	    	print(m_prevState + "->" + m_state + " " + Time.time);
+  	    	if (debugActive) {print(m_prevState + "->" + m_state + " " + Time.time);}
     	}
     	
     }
@@ -141,7 +143,7 @@ public class CMJ2Hero : MonoBehaviour
     	float xdistfromcenter = (m_xform.position.x + 1000f) % 1f;
     	if (xdistfromcenter > 0.5f)
     		xdistfromcenter -= 1f;
-    	//print(m_xform.position.x + " " + xdistfromcenter);
+    	//if (debugActive) {print(m_xform.position.x + " " + xdistfromcenter);}
     	m_xform.position += new Vector3 (
     		Mathf.Abs(xdistfromcenter) < m_ladderSnapSpeed ? -xdistfromcenter :
     			(Mathf.Sign(xdistfromcenter) * -m_ladderSnapSpeed), 
@@ -195,7 +197,7 @@ public class CMJ2Hero : MonoBehaviour
     		}
     	}
 	    //else
-	    //	print("Not jumping " + m_onGround + " " + (Time.time - m_lastJumpTime));
+	    //	if (debugActive) {print("Not jumping " + m_onGround + " " + (Time.time - m_lastJumpTime));}
     }
     
     void setDir (float dir)
@@ -209,14 +211,14 @@ public class CMJ2Hero : MonoBehaviour
 	
 	/*void OnTriggerStay (Collider col)
 	{
-		print("MyTriggerStay " + col.name);
+		if (debugActive) {print("MyTriggerStay " + col.name);}
 		
 		changeState(CMJ2HeroState.UP);
 	}*/
 	
 	void OnTriggerStayExt (CCollisionDelegate.CTwoColliders cols)
 	{
-		//print("Trigger " + cols.mine.name + " " + cols.other.name);
+		//if (debugActive) {print("Trigger " + cols.mine.name + " " + cols.other.name);}
 		
 		int lay = cols.other.gameObject.layer;
 		bool isjump = lay == CMJ2Manager.LAYER_GROUND ||
