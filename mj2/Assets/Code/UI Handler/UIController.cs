@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class UIController : MonoBehaviour {
 	public static UIController g;
 
+	public GameObject debugObject;
 	public UIProperties m_UIProperties;
 	public Dictionary<string, List<GameObject>> originalObjects;
 	public Dictionary<string, List<GameObject>> playerPlacedObjects;
@@ -19,6 +20,13 @@ public class UIController : MonoBehaviour {
 		Vector2 transformedPoint = new Vector2();
 		transformedPoint.x = Mathf.Floor(pos.x - gameObject.transform.position.x + 0.5f);
 		transformedPoint.y = Mathf.Floor(pos.y - gameObject.transform.position.y + 0.5f);
+		return transformedPoint;
+	}
+
+	public Vector2 PosFromCell (Vector2 cell) {
+		Vector2 transformedPoint = new Vector2();
+		transformedPoint.x = cell.x + gameObject.transform.position.x;
+		transformedPoint.y = cell.y + gameObject.transform.position.y;
 		return transformedPoint;
 	}
 
@@ -90,6 +98,11 @@ public class UIController : MonoBehaviour {
 		return CellFromPos(transformedPoint);
 	}
 
+	Vector3 MapSquareToPoint (Vector2 square) {
+		Vector2 pos = PosFromCell(square);
+		return new Vector3(pos.x,pos.y,0);
+	}
+
 	void Awake () {
 		g = this;
 		originalObjects = new Dictionary<string, List<GameObject>>();
@@ -97,14 +110,19 @@ public class UIController : MonoBehaviour {
 		m_UIProperties = gameObject.GetComponent<UIProperties>();
 	}
 
+	public void CreateDebugObjectAtCell (Vector2 cell) {
+		Instantiate(debugObject, MapSquareToPoint(cell), Quaternion.identity);
+	}
+
 	void Update () {
  		if (Input.GetButtonDown("Click")) {
  			print (MapPointToSquare (Input.mousePosition));
- 			
+
  			if (DoesCellContainObject(MapPointToSquare (Input.mousePosition))) {
  				print ("Filled");
  			} else {
  				print ("Empty");
+ 				UIController.g.CreateDebugObjectAtCell(MapPointToSquare (Input.mousePosition));
  			}
  			
             /*Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
