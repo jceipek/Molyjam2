@@ -16,6 +16,8 @@ public class CMJ2Directive : MonoBehaviour {
 	{
 		print("Complete");
 		
+		collider.enabled = false;
+		
 		CTintMesh tm = GetComponent<CTintMesh>();
 		if (tm)
 		{
