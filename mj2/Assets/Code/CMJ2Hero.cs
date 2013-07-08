@@ -107,6 +107,8 @@ public class CMJ2Hero : MonoBehaviour
     				
     				if (m_blood)
 	    				m_blood.Play();
+	    				
+	    			CMJ2Manager.g.restartAfterDelay();
     			break;
     		}
     		
@@ -136,11 +138,11 @@ public class CMJ2Hero : MonoBehaviour
     {
     	changeState(CMJ2HeroState.IDLE);
     	setDir(1f);
-    	yield return new WaitForSeconds(3f);
+    	yield return new WaitForSeconds(2f);
     	setDir(-1f);
-    	yield return new WaitForSeconds(3f);
+    	yield return new WaitForSeconds(2f);
     	setDir(1f);
-    	yield return new WaitForSeconds(3f);
+    	yield return new WaitForSeconds(2f);
     	changeState(CMJ2HeroState.WALK);
         //yield return new WaitForSeconds(1.5f);
         //changeState(CMJ2HeroState.JUMP);
@@ -207,6 +209,7 @@ public class CMJ2Hero : MonoBehaviour
     public void doorClosed ()
     {
     	m_sprite.renderer.enabled = false;
+    	CMJ2Manager.g.nextAfterDelay();
     }
     
     void makeJump ()
@@ -273,12 +276,20 @@ public class CMJ2Hero : MonoBehaviour
     	int hitlayer = -1;
     	if (Physics.Raycast(m_xform.position + new Vector3 (0f, 1f, -4f), Vector3.forward, out hitinfo, 5f, CMJ2Manager.MASK_ALL_EXCEPT_HERO))
     		hitlayer = hitinfo.collider.gameObject.layer;
-
-	    changeState(CMJ2HeroState.CLIMB);
-	    setVDir(hitlayer == CMJ2Manager.LAYER_LADDER ? 1 : -1);
-	    
-	    if (m_Vdir == 1)
-	    	searchForDirective(CMJ2Directive.CMJ2DirectiveType.UP);
+		bool canclimbup = hitlayer == CMJ2Manager.LAYER_LADDER;
+    	hitlayer = -1;
+    	if (Physics.Raycast(m_xform.position + new Vector3 (0f, -1f, -4f), Vector3.forward, out hitinfo, 5f, CMJ2Manager.MASK_ALL_EXCEPT_HERO))
+    		hitlayer = hitinfo.collider.gameObject.layer;
+		bool canclimbdown = hitlayer == CMJ2Manager.LAYER_LADDER;
+		
+		if (canclimbup || canclimbdown)
+		{
+		    changeState(CMJ2HeroState.CLIMB);
+		    setVDir(canclimbup ? 1 : -1);
+		    
+		    if (m_Vdir == 1)
+		    	searchForDirective(CMJ2Directive.CMJ2DirectiveType.UP);
+		}
     }
     
     void setDir (float dir)

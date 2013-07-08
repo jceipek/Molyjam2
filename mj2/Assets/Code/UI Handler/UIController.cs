@@ -9,6 +9,8 @@ public class UIController : MonoBehaviour {
 	public UIProperties m_UIProperties;
 	public Dictionary<string, List<GameObject>> originalObjects;
 	public Dictionary<string, List<GameObject>> playerPlacedObjects;
+	
+	public Camera m_theCamera;
 
 	public string StringifyPosition (Vector2 pos) {
 		return Mathf.Floor(pos.x) +
@@ -65,6 +67,29 @@ public class UIController : MonoBehaviour {
 		}
 		return false;
 	}
+	
+	public GameObject GetObjectInPos (Vector2 pos) {
+		string posStr = this.StringifyPosition(pos);
+		if (playerPlacedObjects.ContainsKey(posStr))
+			return (playerPlacedObjects[posStr].Count > 0 ? playerPlacedObjects[posStr][0] : null);
+		return null;
+	}
+	public void RemoveObjectInPos (Vector2 pos) {
+		string posStr = this.StringifyPosition(pos);
+		if (playerPlacedObjects.ContainsKey(posStr) &&
+			playerPlacedObjects[posStr].Count > 0)
+			playerPlacedObjects[posStr].RemoveAt(0);
+	}
+	
+	public void AddObjectToPos (GameObject obj, Vector2 pos) {
+		
+		string posStr = this.StringifyPosition(pos);
+		
+		if (!playerPlacedObjects.ContainsKey(posStr)) {
+			playerPlacedObjects.Add(posStr, new List<GameObject>());
+		}
+		playerPlacedObjects[posStr].Add(obj);
+	}
 
 	public bool DoesCellContainOriginalObject (Vector2 pos) {
 		string posStr = this.StringifyPosition(pos);
@@ -83,13 +108,20 @@ public class UIController : MonoBehaviour {
 				}	
 			}
 		}
+		if (originalObjects.ContainsKey(posStr)) {
+			foreach (GameObject obj in originalObjects[posStr]) {
+				if (obj.layer == tpe) {
+					return true;
+				}	
+			}
+		}
 		return false;
 	}
 
 	public bool CanPlaceAt (GameObject obj, Vector2 pos) {
 		// TODO: Add special cases for objects that must be placed on the ground
 
-		if (IsCellPartOfInterface(pos)) {
+		if (!IsCellPartOfInterface(pos)) {
 			return false;
 		}
 
@@ -123,7 +155,7 @@ public class UIController : MonoBehaviour {
 	}
 
 	Vector2 MapPointToSquare (Vector3 point) {
-		Vector2 transformedPoint = Camera.main.ScreenToWorldPoint(point);
+		Vector2 transformedPoint = m_theCamera.ScreenToWorldPoint(point);
 		return CellFromPos(transformedPoint);
 	}
 
@@ -142,25 +174,63 @@ public class UIController : MonoBehaviour {
 	public void CreateDebugObjectAtCell (Vector2 cell) {
 		Instantiate(debugObject, MapSquareToPoint(cell), Quaternion.identity);
 	}
+	
+	public GameObject m_selected;
+	Vector2 m_selectedPos;
 
 	void Update () {
- 		if (Input.GetButtonDown("Click")) {
- 			print (MapPointToSquare (Input.mousePosition));
+		
+		bool press = Input.GetButtonDown("Click");
+		bool release = Input.GetButtonUp("Click");
+ 		if ((m_selected == null && press) ||
+ 			(m_selected && release)) {
 
- 			if (DoesCellContainObject(MapPointToSquare (Input.mousePosition))) {
- 				print ("Filled");
- 			} else {
- 				print ("Empty");
- 				if (IsCellPartOfInterface(MapPointToSquare (Input.mousePosition))) {
- 					UIController.g.CreateDebugObjectAtCell(MapPointToSquare (Input.mousePosition));	
- 				}
- 				
- 			}
- 			
+			Vector2 pos = MapPointToSquare (Input.mousePosition);
+			
+			if (m_selected)
+			{
+				if (CanPlaceAt(m_selected, pos))
+				{
+					print("can place");
+				}
+				else
+				{
+					pos = m_selectedPos;
+					print("blocked");
+				}
+				
+				AddObjectToPos(m_selected, pos);				
+	        	m_selected.transform.position = MapSquareToPoint(pos);
+				m_selected = null;
+				
+			}
+			else
+			{
+	 			if (DoesCellContainPlayerPlacedObject(pos)) {
+	 				print ("Filled");
+	 				
+	 				m_selectedPos = pos;
+	 				m_selected = GetObjectInPos(pos);
+	 				if (m_selected)
+	 					RemoveObjectInPos(pos);
+	 			} else {
+	 				print ("Empty");
+	 				//if (IsCellPartOfInterface(MapPointToSquare (Input.mousePosition))) {
+	 				//	UIController.g.CreateDebugObjectAtCell(MapPointToSquare (Input.mousePosition));	
+	 				//}
+	 				
+	 			}
+			}
             /*Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray))
                 Instantiate(particle, transform.position, transform.rotation) as GameObject;
             */
+        }
+        
+        if (m_selected != null)
+        {
+        	//print(MapPointToSquare (Input.mousePosition));
+        	m_selected.transform.position = MapSquareToPoint(MapPointToSquare (Input.mousePosition)) + new Vector3 (0f, 0f, -9f);
         }
 	}
 }

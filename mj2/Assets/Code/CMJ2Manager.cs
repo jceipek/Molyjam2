@@ -20,6 +20,8 @@ public class CMJ2Manager : MonoBehaviour
 
 	public GUIText m_scoreText;
 	
+	public int m_numLevels = 1;
+	
     public static CMJ2Manager g;
     
 	void Awake () 
@@ -32,13 +34,41 @@ public class CMJ2Manager : MonoBehaviour
     	
         g = this;
         
-        DontDestroyOnLoad(gameObject);
-        DontDestroyOnLoad(this);
+       // DontDestroyOnLoad(gameObject);
+       // DontDestroyOnLoad(this);
 	}
 		
 	public void directives (int now, int total)
 	{
 		m_scoreText.text = now + " / " + total;
+	}
+	
+	public void restartAfterDelay ()
+	{
+		Invoke("restart", 3f);
+	}
+	public void nextAfterDelay ()
+	{
+		Invoke("next", 3f);
+	}
+	
+	public void restart ()
+	{
+		Application.LoadLevel(Application.loadedLevelName);
+	}
+	
+	public void next ()
+	{
+		int nextlevel = Application.loadedLevel + 1;
+		if (nextlevel > m_numLevels)
+			nextlevel = 0;
+		Application.LoadLevel(nextlevel);
+	}
+	
+	void Update ()
+	{
+		if (Input.GetKeyDown(KeyCode.R))
+			restart();
 	}
 
 }
