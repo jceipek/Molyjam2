@@ -119,9 +119,14 @@ public class UIController : MonoBehaviour {
 	}
 
 	public bool CanPlaceAt (GameObject obj, Vector2 pos) {
-		// TODO: Add special cases for objects that must be placed on the ground
+		// TODO: Add special cases for any objects that must be placed on the ground
 
 		if (!IsCellPartOfInterface(pos)) {
+			return false;
+		}
+
+		// No object can be placed on the gate
+    	if (DoesCellContainObjectType(pos, CMJ2Manager.LAYER_GATE)) {
 			return false;
 		}
 
@@ -214,7 +219,12 @@ public class UIController : MonoBehaviour {
 	 				if (m_selected)
 	 					RemoveObjectInPos(pos);
 	 			} else {
-	 				print ("Empty");
+	 				if (DoesCellContainObject(pos)) {
+	 					print ("Contains Object");
+	 				} else {
+	 					print ("Empty");
+	 				}
+	 				
 	 				//if (IsCellPartOfInterface(MapPointToSquare (Input.mousePosition))) {
 	 				//	UIController.g.CreateDebugObjectAtCell(MapPointToSquare (Input.mousePosition));	
 	 				//}
