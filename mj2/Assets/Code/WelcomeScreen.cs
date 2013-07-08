@@ -4,13 +4,23 @@ using System.Collections;
 public class WelcomeScreen : MonoBehaviour {
 
 	public string m_levelToLoad = "Level 1";
-	
-	// Use this for initialization
-	void Start () {
-		DontDestroyOnLoad(audio);
+		
+    public static WelcomeScreen g;
+    
+	void Awake () 
+    {
+    	if (g != null)
+    	{
+    		DestroyImmediate(gameObject);
+    		return;
+    	}
+    	
+        g = this;
+        
+       DontDestroyOnLoad(gameObject);
+       DontDestroyOnLoad(this);
 	}
-	
-	// Update is called once per frame
+
 	void Update () 
 	{
 		if (Input.GetMouseButtonDown(0))

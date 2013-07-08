@@ -108,6 +108,13 @@ public class UIController : MonoBehaviour {
 				}	
 			}
 		}
+		if (originalObjects.ContainsKey(posStr)) {
+			foreach (GameObject obj in originalObjects[posStr]) {
+				if (obj.layer == tpe) {
+					return true;
+				}	
+			}
+		}
 		return false;
 	}
 
@@ -169,9 +176,14 @@ public class UIController : MonoBehaviour {
 	}
 	
 	public GameObject m_selected;
+	Vector2 m_selectedPos;
 
 	void Update () {
- 		if (Input.GetButtonDown("Click")) {
+		
+		bool press = Input.GetButtonDown("Click");
+		bool release = Input.GetButtonUp("Click");
+ 		if ((m_selected == null && press) ||
+ 			(m_selected && release)) {
 
 			Vector2 pos = MapPointToSquare (Input.mousePosition);
 			
@@ -180,22 +192,27 @@ public class UIController : MonoBehaviour {
 				if (CanPlaceAt(m_selected, pos))
 				{
 					print("can place");
-					AddObjectToPos(m_selected, pos);
-					m_selected = null;
 				}
 				else
+				{
+					pos = m_selectedPos;
 					print("blocked");
+				}
+				
+				AddObjectToPos(m_selected, pos);				
+	        	m_selected.transform.position = MapSquareToPoint(pos);
+				m_selected = null;
+				
 			}
 			else
 			{
 	 			if (DoesCellContainPlayerPlacedObject(pos)) {
 	 				print ("Filled");
 	 				
+	 				m_selectedPos = pos;
 	 				m_selected = GetObjectInPos(pos);
 	 				if (m_selected)
-	 				{					
 	 					RemoveObjectInPos(pos);
-	 				}
 	 			} else {
 	 				print ("Empty");
 	 				//if (IsCellPartOfInterface(MapPointToSquare (Input.mousePosition))) {
@@ -213,7 +230,7 @@ public class UIController : MonoBehaviour {
         if (m_selected != null)
         {
         	//print(MapPointToSquare (Input.mousePosition));
-        	m_selected.transform.position = MapSquareToPoint(MapPointToSquare (Input.mousePosition));
+        	m_selected.transform.position = MapSquareToPoint(MapPointToSquare (Input.mousePosition)) + new Vector3 (0f, 0f, -9f);
         }
 	}
 }

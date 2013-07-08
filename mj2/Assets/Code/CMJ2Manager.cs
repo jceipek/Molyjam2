@@ -20,6 +20,8 @@ public class CMJ2Manager : MonoBehaviour
 
 	public GUIText m_scoreText;
 	
+	public int m_numLevels = 1;
+	
     public static CMJ2Manager g;
     
 	void Awake () 
@@ -32,8 +34,8 @@ public class CMJ2Manager : MonoBehaviour
     	
         g = this;
         
-        DontDestroyOnLoad(gameObject);
-        DontDestroyOnLoad(this);
+       // DontDestroyOnLoad(gameObject);
+       // DontDestroyOnLoad(this);
 	}
 		
 	public void directives (int now, int total)
@@ -57,7 +59,10 @@ public class CMJ2Manager : MonoBehaviour
 	
 	public void next ()
 	{
-		Application.LoadLevel(Application.loadedLevel + 1);
+		int nextlevel = Application.loadedLevel + 1;
+		if (nextlevel > m_numLevels)
+			nextlevel = 0;
+		Application.LoadLevel(nextlevel);
 	}
 	
 	void Update ()
