@@ -148,6 +148,10 @@ public class UIController : MonoBehaviour {
 		    	break;
 
 		    default:
+		    	// No object can be placed on the gate
+		    	if (DoesCellContainObjectType(pos, CMJ2Manager.LAYER_GATE)) {
+    				return false;
+    			}
 		        break;
 		}
 
@@ -214,7 +218,12 @@ public class UIController : MonoBehaviour {
 	 				if (m_selected)
 	 					RemoveObjectInPos(pos);
 	 			} else {
-	 				print ("Empty");
+	 				if (DoesCellContainObject(pos)) {
+	 					print ("Contains Object");
+	 				} else {
+	 					print ("Empty");
+	 				}
+	 				
 	 				//if (IsCellPartOfInterface(MapPointToSquare (Input.mousePosition))) {
 	 				//	UIController.g.CreateDebugObjectAtCell(MapPointToSquare (Input.mousePosition));	
 	 				//}
