@@ -9,23 +9,13 @@ public class WelcomeScreen : MonoBehaviour {
     
 	void Awake () 
     {
-    	if (g != null)
-    	{
-    		DestroyImmediate(gameObject);
-    		return;
-    	}
-    	
         g = this;
-        
-       DontDestroyOnLoad(gameObject);
-       DontDestroyOnLoad(this);
 	}
 
 	void Update () 
 	{
 		if (Input.GetMouseButtonDown(0))
 		{
-			Destroy(this);
 			Application.LoadLevel(m_levelToLoad);
 		}
 	}

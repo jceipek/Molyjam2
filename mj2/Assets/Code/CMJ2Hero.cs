@@ -407,14 +407,22 @@ public class CMJ2Hero : MonoBehaviour
 							(m_dir < 0 && posxoncol > 0.01f))
 							climb();
 					}
+					else if (m_onGround && m_Vdir < 0)
+					{
+						if (!Physics.Raycast(m_underRaycastPoint.position + new Vector3 (0f, 0f, -4f), Vector3.forward, out hitinfo, 5f, 1 << CMJ2Manager.LAYER_LADDER))
+						{
+							print("Climbed down to ground");
+							changeState(CMJ2HeroState.WALK);
+						}
+					}
 				}
 			}
 			else
 			{
 				// Continue climbing until out of ground completely if ladder is absent
-				if (!Physics.Raycast(m_xform.position + new Vector3 (0f, 1f, -4f), Vector3.forward, out hitinfo, 5f, CMJ2Manager.MASK_ALL_GROUND) &&
-					!m_onGround && 
-					m_state == CMJ2HeroState.CLIMB)
+				if (!m_onGround && 
+					m_state == CMJ2HeroState.CLIMB && 
+					!Physics.Raycast(m_xform.position + new Vector3 (0f, 1f, -4f), Vector3.forward, out hitinfo, 5f, CMJ2Manager.MASK_ALL_GROUND))
 					 changeState(CMJ2HeroState.WALK);
 			}
 	    	
@@ -422,7 +430,7 @@ public class CMJ2Hero : MonoBehaviour
 	    	int newwayup = vely > 1f ? 1 : vely < -1f ? -1 : 0;
 	    	
 	    	//// DEBUG
-	    	if (m_wayUp >= 0 && newwayup < 0 && m_state != CMJ2HeroState.IDLE)
+	    	if (!m_onGround && m_wayUp >= 0 && newwayup < 0 && m_state == CMJ2HeroState.WALK)
 	    	{
 	    		//Debug.DrawLine(m_lowRaycastPoint.position + new Vector3 (-1f, -0.5f), m_lowRaycastPoint.position + new Vector3 (1, -0.5f), Color.blue, 10f);
 	    		
