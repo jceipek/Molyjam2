@@ -1,0 +1,22 @@
+{
+  "name": "frog"
+, "directive_count": 4
+, "objects": [
+    { 
+      "name": "Hero"
+    , "pos": {"x": 0, "y": 0}
+    }
+  , { 
+      "name": "Dirt Ground"
+    , "pos": {"x": -1, "y": -1}
+    }
+  , { 
+      "name": "Dirt Ground"
+    , "pos": {"x": 0, "y": -1}
+    }
+  , { 
+      "name": "Dirt Ground"
+    , "pos": {"x": 1, "y": -1}
+    }
+  ]
+}

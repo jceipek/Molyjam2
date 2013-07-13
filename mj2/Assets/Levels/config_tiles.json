@@ -1,0 +1,41 @@
+{
+  "objects":
+  [
+    { 
+      "name": "Hero"
+    , "resource_path": "Hero"
+    , "type": "LAYER_HERO"
+    , "z_depth": -0.1
+    }
+  , {
+      "name": "Dirt Ground"
+    , "resource_path": "Tile_Ground" 
+    , "type": "LAYER_GROUND"
+    , "z_depth": 0.0
+    }
+  , { 
+      "name": "Wooden Ladder"
+    , "resource_path": "Tile_Ladder"
+    , "type": "LAYER_LADDER"
+    , "z_depth": 0.0
+    }
+  , { 
+      "name": "Metal Spikes"
+    , "resource_path": "Tile_Spikes"
+    , "type": "LAYER_SPIKE"
+    , "z_depth": 0.1
+    }
+  , { 
+      "name": "Gate"
+    , "resource_path": "Gate"
+    , "type": "LAYER_GATE"
+    , "z_depth": -0.1
+    }
+  , { 
+      "name": "Up Directive"
+    , "resource_path": "Tile_Directive"
+    , "type": "LAYER_DIRECTIVE"
+    , "z_depth": -0.1
+    }
+  ]
+}
