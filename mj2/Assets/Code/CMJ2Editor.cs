@@ -10,13 +10,6 @@ public class CMJ2Editor : MonoBehaviour
 {
     public static CMJ2Editor g;
 
-    public enum CMJ2EditorState {
-        NONE = 0,
-        CREATE,
-        DELETE
-    };
-
-    public CMJ2EditorState m_editorState;
     public GameObject m_currObject;
     public int m_selectedIndex;
     public List<string> m_objectNames;
@@ -36,6 +29,26 @@ public class CMJ2Editor : MonoBehaviour
         Debug.Log("Click and drag to add objects");
         Debug.Log("Hold alt while clicking to delete objects");
         Debug.Log("Cycle through objects by pressing the U/D arrows or using the scroll wheel");
+
+        FloatingObjectInCell(m_objectNames[m_selectedIndex], new Cell(0,0));
+    }
+
+    private void FloatingObjectInCell (string name, Cell cell)
+    {
+        Vector3 pos = CMJ2EnvironmentManager.g.CellToWorldPos(cell, -9f);
+        m_currObject = CMJ2LevelManager.g.InstantiateObjectByNameInCell(name, cell);
+        m_currObject.transform.position = pos;
+        CMJ2Tile tile = m_currObject.GetComponent<CMJ2Tile>();
+        if (tile)
+        {
+            tile.m_mapOnStart = false; // TODO (Julian): Remove when all objects are loaded from a file rather than a scene
+        }
+
+    }
+
+    private void DeleteFloatingObject ()
+    {
+        if (m_currObject) Destroy(m_currObject);
     }
 
     private void CyclePrev ()
@@ -50,6 +63,8 @@ public class CMJ2Editor : MonoBehaviour
 
     void Update ()
     {
+        Cell cell = CMJ2EnvironmentManager.g.ScreenPosToCell(Input.mousePosition);
+
         bool clicking = Input.GetButton("Click");
         bool deleteModifier = Input.GetButton("Delete Modifier");
         float scrollDir = Input.GetAxis("Mouse ScrollWheel");
@@ -60,11 +75,17 @@ public class CMJ2Editor : MonoBehaviour
             if (scrollDir > 0) CycleNext();
             if (scrollDir < 0) CyclePrev();
             Debug.Log("Switched to " + m_objectNames[m_selectedIndex]);
+            DeleteFloatingObject();
+            FloatingObjectInCell(m_objectNames[m_selectedIndex], cell);
+        }
+
+        if (m_currObject)
+        {
+            m_currObject.transform.position = CMJ2EnvironmentManager.g.CellToWorldPos(cell, -9f);
         }
 
         if (clicking)
         {
-            Cell cell = CMJ2EnvironmentManager.g.ScreenPosToCell(Input.mousePosition);
             GameObject origObjInCell = CMJ2EnvironmentManager.g.GetOriginalObjectInCell(cell);
             GameObject playerObjInCell = CMJ2EnvironmentManager.g.GetPlayerPlacedObjectInCell(cell);
             if (deleteModifier)

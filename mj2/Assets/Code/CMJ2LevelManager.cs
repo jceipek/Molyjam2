@@ -126,10 +126,10 @@ public class CMJ2LevelManager : MonoBehaviour
         m_tileNameToConfigMap = map;
     }
 
-    public void InstantiateObjectByNameInCell (string name, Cell cell)
+    public GameObject InstantiateObjectByNameInCell (string name, Cell cell)
     {
         CMJ2Object obj = new CMJ2Object (m_tileNameToConfigMap[name], cell);
-        GameObject.Instantiate(obj.m_prefab, obj.m_pos, Quaternion.identity);
+        return GameObject.Instantiate(obj.m_prefab, obj.m_pos, Quaternion.identity) as GameObject;
     }
 
     public CMJ2LevelData CreateLevelDataFromJSONString(string json) {
