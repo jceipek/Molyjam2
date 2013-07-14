@@ -78,11 +78,12 @@ public class CMJ2Loader : MonoBehaviour
             m_levelName = lvlData["name"] as string;
             m_directive_count = (int)((double)lvlData["directive_count"]);
             m_originalObjects = new List<CMJ2Object>();
+            m_placeableObjects = new List<CMJ2Object>();
             foreach (Hashtable obj in (lvlData["objects"] as ArrayList))
             {
                 m_originalObjects.Add(new CMJ2Object(obj, configInfo));
             }
-            foreach (Hashtable obj in (lvlData["objects"] as ArrayList))
+            foreach (Hashtable obj in (lvlData["placeable_objects"] as ArrayList))
             {
                 m_placeableObjects.Add(new CMJ2Object(obj, configInfo));
             }
@@ -109,6 +110,11 @@ public class CMJ2Loader : MonoBehaviour
         foreach (CMJ2Object obj in lvl.m_originalObjects)
         {
             GameObject.Instantiate(obj.m_prefab, obj.m_pos, Quaternion.identity);
+        }
+        foreach (CMJ2Object obj in lvl.m_placeableObjects)
+        {
+            GameObject placeable = GameObject.Instantiate(obj.m_prefab, obj.m_pos, Quaternion.identity) as GameObject;
+            placeable.GetComponent<CMJ2Tile>().m_moveable = true;
         }
     }
 
