@@ -15,7 +15,7 @@ public class CMJ2Loader : MonoBehaviour
 
     protected Dictionary<string, CMJ2TileConfig> m_tileNameToConfigMap;
 
-	void Awake () 
+	void Awake ()
     {
     	// Set up singleton
         g = this;
@@ -41,6 +41,7 @@ public class CMJ2Loader : MonoBehaviour
     protected class CMJ2Object
     {
     	public GameObject m_prefab;
+        public Cell m_cell;
     	public Vector3 m_pos;
 
         public CMJ2Object (Hashtable data, Dictionary<string, CMJ2TileConfig> configInfo)
@@ -54,9 +55,9 @@ public class CMJ2Loader : MonoBehaviour
             {
                 CMJ2TileConfig config = configInfo[name];
                 m_prefab = config.m_prefab;
-                m_pos = new Vector3((float)((double)(data["pos"] as Hashtable)["x"]),
-                                  (float)((double)(data["pos"] as Hashtable)["y"]),
-                                  config.m_zDepth);
+                m_cell = new Cell((int)((double)(data["pos"] as Hashtable)["x"]),
+                                  (int)((double)(data["pos"] as Hashtable)["y"]));
+                m_pos = CMJ2EnvironmentManager.g.CellToWorldPos(m_cell, config.m_zDepth);
             }
             else
             {
@@ -111,6 +112,7 @@ public class CMJ2Loader : MonoBehaviour
         {
             GameObject.Instantiate(obj.m_prefab, obj.m_pos, Quaternion.identity);
         }
+
         foreach (CMJ2Object obj in lvl.m_placeableObjects)
         {
             GameObject placeable = GameObject.Instantiate(obj.m_prefab, obj.m_pos, Quaternion.identity) as GameObject;
@@ -127,7 +129,7 @@ public class CMJ2Loader : MonoBehaviour
     }
 
     void Start ()
-    { 
+    {
         m_tileNameToConfigMap = tileConfig();
         //loadLevel(0);
         string txt = System.IO.File.ReadAllText(Application.dataPath + "/Levels/level1.json");

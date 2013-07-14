@@ -10,12 +10,20 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 	public Dictionary<Cell, List<GameObject>> m_originalObjects;
 	public Dictionary<Cell, List<GameObject>> m_playerPlacedObjects;
 
-	private UIProperties m_UIProperties;
-	
+	public UIProperties m_UIProperties;
+
 	public Camera m_mainCamera;
 
 	public GameObject m_selected;
 	Cell m_selectedPos;
+
+	void Awake ()
+	{
+		g = this;
+		m_originalObjects = new Dictionary<Cell, List<GameObject>>();
+		m_playerPlacedObjects = new Dictionary<Cell, List<GameObject>>();
+		if (!m_UIProperties) m_UIProperties = gameObject.GetComponent<UIProperties>();
+	}
 
 	public Cell WorldPosToCell (Vector3 pos)
 	{
@@ -24,11 +32,11 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		return cell;
 	}
 
-	public Vector3 CellToWorldPos (Cell cell)
+	public Vector3 CellToWorldPos (Cell cell, float zDepth = 0.0f)
 	{
-		Vector3 worldPos =  Vector3.zero;
-		worldPos.x = cell.X + gameObject.transform.position.x;
-		worldPos.y = cell.Y + gameObject.transform.position.y;
+		Vector3 worldPos =  new Vector3(worldPos.x = cell.X + gameObject.transform.position.x,
+										worldPos.y = cell.Y + gameObject.transform.position.y,
+										zDepth);
 		return worldPos;
 	}
 
@@ -79,11 +87,11 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		}
 		return false;
 	}
-	
+
 	public GameObject GetPlayerPlacedObjectInCell (Cell cell)
 	{
 		if (m_playerPlacedObjects.ContainsKey(cell))
-		{	
+		{
 			int len = m_playerPlacedObjects[cell].Count;
 			return (len > 0 ? m_playerPlacedObjects[cell][len - 1] : null);
 		}
@@ -97,11 +105,11 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		{
 			m_playerPlacedObjects[cell].Remove(obj);
 		}
-			
+
 	}
-	
+
 	public void AddPlayerPlacedObjectToCell (GameObject obj, Cell cell)
-	{		
+	{
 		if (!m_playerPlacedObjects.ContainsKey(cell))
 		{
 			m_playerPlacedObjects.Add(cell, new List<GameObject>());
@@ -110,7 +118,7 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 	}
 
 	public void AddOriginalObjectToCell (GameObject obj, Cell cell)
-	{		
+	{
 		if (!m_originalObjects.ContainsKey(cell))
 		{
 			m_originalObjects.Add(cell, new List<GameObject>());
@@ -135,7 +143,7 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 				if (obj.layer == objType)
 				{
 					return true;
-				}	
+				}
 			}
 		}
 		if (m_originalObjects.ContainsKey(cell))
@@ -145,7 +153,7 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 				if (obj.layer == objType)
 				{
 					return true;
-				}	
+				}
 			}
 		}
 		return false;
@@ -168,7 +176,7 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 
 		switch (obj.layer)
 		{
-		    case CMJ2Manager.LAYER_GROUND: 
+		    case CMJ2Manager.LAYER_GROUND:
     			if (DoesCellContainObjectType(cell, CMJ2Manager.LAYER_GROUND) ||
     				DoesCellContainObjectType(cell, CMJ2Manager.LAYER_SPIKE))
     			{
@@ -196,14 +204,6 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		}
 
 		return true;
-	}
-
-	void Awake ()
-	{
-		g = this;
-		m_originalObjects = new Dictionary<Cell, List<GameObject>>();
-		m_playerPlacedObjects = new Dictionary<Cell, List<GameObject>>();
-		m_UIProperties = gameObject.GetComponent<UIProperties>();
 	}
 
 	public void CreateDebugObjectAtCell (Cell cell)

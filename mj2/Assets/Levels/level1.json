@@ -3,26 +3,30 @@
 , "directive_count": 4
 , "objects":
     [
-      { 
+      {
         "name": "Hero"
+      , "pos": {"x": 0, "y": 1}
+      }
+    , {
+        "name": "Dirt Ground"
       , "pos": {"x": 0, "y": 0}
       }
-    , { 
+    , {
         "name": "Dirt Ground"
-      , "pos": {"x": -1, "y": -1}
+      , "pos": {"x": 1, "y": 0}
       }
-    , { 
+    , {
         "name": "Dirt Ground"
-      , "pos": {"x": 0, "y": -1}
+      , "pos": {"x": 2, "y": 0}
       }
-    , { 
-        "name": "Dirt Ground"
-      , "pos": {"x": 1, "y": -1}
+    , {
+        "name": "Gate"
+      , "pos": {"x": 2, "y": 2}
       }
     ]
 , "placeable_objects":
     [
-      { 
+      {
         "name": "Dirt Ground"
       , "pos": {"x": 6, "y": 6}
       }
