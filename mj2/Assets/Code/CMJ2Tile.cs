@@ -15,9 +15,7 @@ public class CMJ2Tile : MonoBehaviour
 		for (int x = 0; x < dims.x; x++) {
 			for (int y = 0; y < dims.y; y++) {
 				Vector3 deltaDim = new Vector3(dims.x/2 - x, dims.y/2 - y, 0);
-				Cell cell = UIController.g.WorldPosToCell(gameObject.transform.position - deltaDim);
-				print(gameObject.transform.position - deltaDim);
-				print(cell.X + " " + cell.Y);
+				Cell cell = CMJ2EnvironmentManager.g.WorldPosToCell(gameObject.transform.position - deltaDim);
 				cells.Add(cell);
 			}
 		}
@@ -30,22 +28,14 @@ public class CMJ2Tile : MonoBehaviour
 		{
 			List<Cell> cells = EnumerateCells();
 			foreach (Cell cell in cells) {
-				if (!UIController.g.m_playerPlacedObjects.ContainsKey(cell)) {
-					UIController.g.m_playerPlacedObjects.Add(cell, new List<GameObject>());
-					//print ("Added list");
-				}
-				UIController.g.m_playerPlacedObjects[cell].Add(gameObject);
+				CMJ2EnvironmentManager.g.AddPlayerPlacedObjectToCell(gameObject, cell);
 			}
 		}	
 		else
 		{
 			List<Cell> cells = EnumerateCells();
 			foreach (Cell cell in cells) {
-				if (!UIController.g.m_originalObjects.ContainsKey(cell)) {
-					UIController.g.m_originalObjects.Add(cell, new List<GameObject>());
-					//print ("Added list");
-				}
-				UIController.g.m_originalObjects[cell].Add(gameObject);
+				CMJ2EnvironmentManager.g.AddOriginalObjectToCell(gameObject, cell);
 			}
 		}
 	}

@@ -1,22 +1,30 @@
 {
   "name": "frog"
 , "directive_count": 4
-, "objects": [
-    { 
-      "name": "Hero"
-    , "pos": {"x": 0, "y": 0}
-    }
-  , { 
-      "name": "Dirt Ground"
-    , "pos": {"x": -1, "y": -1}
-    }
-  , { 
-      "name": "Dirt Ground"
-    , "pos": {"x": 0, "y": -1}
-    }
-  , { 
-      "name": "Dirt Ground"
-    , "pos": {"x": 1, "y": -1}
-    }
-  ]
+, "objects":
+    [
+      { 
+        "name": "Hero"
+      , "pos": {"x": 0, "y": 0}
+      }
+    , { 
+        "name": "Dirt Ground"
+      , "pos": {"x": -1, "y": -1}
+      }
+    , { 
+        "name": "Dirt Ground"
+      , "pos": {"x": 0, "y": -1}
+      }
+    , { 
+        "name": "Dirt Ground"
+      , "pos": {"x": 1, "y": -1}
+      }
+    ]
+, "placeable_objects":
+    [
+      { 
+        "name": "Dirt Ground"
+      , "pos": {"x": 7, "y": 7}
+      }
+    ]
 }

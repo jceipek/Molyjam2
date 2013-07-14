@@ -1,3 +1,4 @@
+using UnityEngine;
 using System;
 
 public struct Cell : IEquatable<Cell>
@@ -47,4 +48,9 @@ public struct Cell : IEquatable<Cell>
     {
         return new Cell(-a.X, -a.Y);
     }
+}
+
+public class CMJ2Conversion : MonoBehaviour
+{
+
 }

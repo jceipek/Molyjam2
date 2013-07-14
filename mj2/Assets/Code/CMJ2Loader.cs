@@ -69,18 +69,22 @@ public class CMJ2Loader : MonoBehaviour
     {
     	public string m_levelName;
     	public int m_directive_count;
-    	public List<CMJ2Object> m_objects;
+    	public List<CMJ2Object> m_originalObjects;
+        public List<CMJ2Object> m_placeableObjects;
 
     	public CMJ2LevelData (string data, Dictionary<string, CMJ2TileConfig> configInfo)
     	{
             Hashtable lvlData = MiniJSON.jsonDecode(data) as Hashtable;
             m_levelName = lvlData["name"] as string;
             m_directive_count = (int)((double)lvlData["directive_count"]);
-            m_objects = new List<CMJ2Object>();
+            m_originalObjects = new List<CMJ2Object>();
             foreach (Hashtable obj in (lvlData["objects"] as ArrayList))
             {
-                print ("HI");
-                m_objects.Add(new CMJ2Object(obj, configInfo));
+                m_originalObjects.Add(new CMJ2Object(obj, configInfo));
+            }
+            foreach (Hashtable obj in (lvlData["objects"] as ArrayList))
+            {
+                m_placeableObjects.Add(new CMJ2Object(obj, configInfo));
             }
     	}
     }
@@ -102,7 +106,7 @@ public class CMJ2Loader : MonoBehaviour
 
     protected void createLevelFromData (CMJ2LevelData lvl)
     {
-        foreach (CMJ2Object obj in lvl.m_objects)
+        foreach (CMJ2Object obj in lvl.m_originalObjects)
         {
             GameObject.Instantiate(obj.m_prefab, obj.m_pos, Quaternion.identity);
         }
