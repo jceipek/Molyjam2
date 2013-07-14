@@ -136,4 +136,14 @@ public class CMJ2LevelManager : MonoBehaviour
         return new CMJ2LevelData(json, m_tileNameToConfigMap);
     }
 
+    public List<string> EnumerateObjectNames ()
+    {
+        List<string> names = new List<string>();
+        foreach (string name in m_tileNameToConfigMap.Keys)
+        {
+            names.Add(name);
+        }
+        return names;
+    }
+
 }

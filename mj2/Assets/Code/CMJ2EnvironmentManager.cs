@@ -119,6 +119,25 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		return null;
 	}
 
+	public GameObject GetOriginalObjectInCell (Cell cell)
+	{
+		if (m_originalObjects.ContainsKey(cell))
+		{
+			int len = m_originalObjects[cell].Count;
+			return (len > 0 ? m_originalObjects[cell][len - 1] : null);
+		}
+		return null;
+	}
+
+	public void RemoveOriginalObjectFromCell (GameObject obj, Cell cell)
+	{
+		if (m_originalObjects.ContainsKey(cell) &&
+			m_originalObjects[cell].Count > 0)
+		{
+			m_originalObjects[cell].Remove(obj);
+		}
+	}
+
 	public void RemovePlayerPlacedObjectFromCell (GameObject obj, Cell cell)
 	{
 		if (m_playerPlacedObjects.ContainsKey(cell) &&
@@ -126,7 +145,6 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		{
 			m_playerPlacedObjects[cell].Remove(obj);
 		}
-
 	}
 
 	public void AddPlayerPlacedObjectToCell (GameObject obj, Cell cell)

@@ -32,6 +32,13 @@
           , "LAYER_HERO"
           ]
       }
+    , {
+        "name": "LAYER_DIRECTIVE"
+      , "cannot_place_on":
+          [
+            "LAYER_DIRECTIVE"
+          ]
+      }
     ]
   , "objects":
     [
