@@ -1,5 +1,5 @@
 {
-  "constraints":
+  "placement_rules":
     [
       {
         "name": "LAYER_GROUND"
