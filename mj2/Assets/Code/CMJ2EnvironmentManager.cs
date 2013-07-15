@@ -219,4 +219,42 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 	{
 		Instantiate(m_debugObject, CellToWorldPos(cell), Quaternion.identity);
 	}
+
+	public void SerializeEnvironment ()
+	{
+		Hashtable hash = new Hashtable();
+		ArrayList objectList = new ArrayList();
+		ArrayList placeableObjectList = new ArrayList();
+		hash["objects"] = objectList;
+		hash["placeable_objects"] = placeableObjectList;
+		foreach (KeyValuePair<Cell, List<GameObject>> pair in m_originalObjects)
+		{
+			Cell cell = pair.Key;
+			Hashtable pos = new Hashtable();
+			pos["x"] = cell.X;
+			pos["y"] = cell.Y;
+			foreach (GameObject go in pair.Value) {
+				CMJ2Tile tile = go.GetComponent<CMJ2Tile>();
+				Hashtable obj = new Hashtable();
+				obj["name"] = tile.objectIdentifier;
+				obj["pos"] = pos;
+				objectList.Add(obj);
+			}
+		}
+		foreach (KeyValuePair<Cell, List<GameObject>> pair in m_playerPlacedObjects)
+		{
+			Cell cell = pair.Key;
+			Hashtable pos = new Hashtable();
+			pos["x"] = cell.X;
+			pos["y"] = cell.Y;
+			foreach (GameObject go in pair.Value) {
+				CMJ2Tile tile = go.GetComponent<CMJ2Tile>();
+				Hashtable obj = new Hashtable();
+				obj["name"] = tile.objectIdentifier;
+				obj["pos"] = pos;
+				placeableObjectList.Add(obj);
+			}
+		}
+		Debug.Log(MiniJSON.jsonEncode(hash));
+	}
 }

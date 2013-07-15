@@ -7,6 +7,7 @@ public class CMJ2Tile : MonoBehaviour
 	public bool m_moveable = false;
 	public bool m_mapOnStart = true; // TODO (Julian): Remove when all objects are loaded from a file rather than a scene
 
+	public string objectIdentifier;
 	public Vector2 dims;
 	public Vector2 cellAnchor;
 

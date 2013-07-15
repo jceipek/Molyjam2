@@ -76,13 +76,13 @@
         "name": "Up Directive"
       , "resource_path": "Tile_Directive_Up"
       , "type": "LAYER_DIRECTIVE"
-      , "z_depth": -0.1
+      , "z_depth": 0.0
       }
     , {
         "name": "Change Dir Directive"
       , "resource_path": "Tile_Directive_Change_Dir"
       , "type": "LAYER_DIRECTIVE"
-      , "z_depth": -0.1
+      , "z_depth": 0.0
       }
     ]
 }

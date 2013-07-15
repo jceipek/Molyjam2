@@ -29,6 +29,7 @@ public class CMJ2Editor : MonoBehaviour
         Debug.Log("Click and drag to add objects");
         Debug.Log("Hold alt while clicking to delete objects");
         Debug.Log("Cycle through objects by pressing the U/D arrows or using the scroll wheel");
+        Debug.Log("Save JSON to console by pressing 's'");
 
         FloatingObjectInCell(m_objectNames[m_selectedIndex], new Cell(0,0));
     }
@@ -65,6 +66,7 @@ public class CMJ2Editor : MonoBehaviour
     {
         Cell cell = CMJ2EnvironmentManager.g.ScreenPosToCell(Input.mousePosition);
 
+        bool save = Input.GetButtonDown("Save");
         bool clicking = Input.GetButton("Click");
         bool deleteModifier = Input.GetButton("Delete Modifier");
         float scrollDir = Input.GetAxis("Mouse ScrollWheel");
@@ -74,9 +76,13 @@ public class CMJ2Editor : MonoBehaviour
         {
             if (scrollDir > 0) CycleNext();
             if (scrollDir < 0) CyclePrev();
-            Debug.Log("Switched to " + m_objectNames[m_selectedIndex]);
             DeleteFloatingObject();
             FloatingObjectInCell(m_objectNames[m_selectedIndex], cell);
+        }
+
+        if (save)
+        {
+            CMJ2EnvironmentManager.g.SerializeEnvironment();
         }
 
         if (m_currObject)
@@ -103,10 +109,7 @@ public class CMJ2Editor : MonoBehaviour
             }
             else if (CMJ2EnvironmentManager.g.IsCellPartOfInterface(cell))
             {
-                if (CMJ2EnvironmentManager.g.CanPlaceTypeAt(CMJ2Manager.LAYER_GROUND, cell))
-                {
-                    CMJ2LevelManager.g.InstantiateObjectByNameInCell(m_objectNames[m_selectedIndex], cell);
-                }
+                CMJ2LevelManager.g.TryInstantiateObjectByNameInCell(m_objectNames[m_selectedIndex], cell);
             }
         }
     }

@@ -59,7 +59,6 @@ public class CMJ2Object
     // Create from config object at location
     public CMJ2Object (CMJ2TileConfig config, Cell cell)
     {
-        string name = config.m_name;
         m_prefab = config.m_prefab;
         m_cell = cell;
         m_pos = CMJ2EnvironmentManager.g.CellToWorldPos(m_cell, config.m_zDepth);
@@ -124,6 +123,16 @@ public class CMJ2LevelManager : MonoBehaviour
             map.Add(config.m_name, config);
         }
         m_tileNameToConfigMap = map;
+    }
+
+    public GameObject TryInstantiateObjectByNameInCell (string name, Cell cell)
+    {
+        CMJ2Object obj = new CMJ2Object (m_tileNameToConfigMap[name], cell);
+        if (CMJ2EnvironmentManager.g.CanPlaceTypeAt(obj.m_prefab.layer, cell))
+        {
+            return GameObject.Instantiate(obj.m_prefab, obj.m_pos, Quaternion.identity) as GameObject;
+        }
+        return null;
     }
 
     public GameObject InstantiateObjectByNameInCell (string name, Cell cell)
