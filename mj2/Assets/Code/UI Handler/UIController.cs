@@ -19,7 +19,7 @@ public class UIController : MonoBehaviour {
 
 			if (m_selected)
 			{
-				if (CMJ2EnvironmentManager.g.CanPlaceAt(m_selected, cell))
+				if (CMJ2EnvironmentManager.g.CanPlaceTypeAt(m_selected.layer, cell))
 				{
 					print("can place");
 				}

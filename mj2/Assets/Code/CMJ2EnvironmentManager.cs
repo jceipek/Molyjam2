@@ -7,15 +7,13 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 	public static CMJ2EnvironmentManager g;
 
 	public GameObject m_debugObject;
-	public Dictionary<Cell, List<GameObject>> m_originalObjects;
-	public Dictionary<Cell, List<GameObject>> m_playerPlacedObjects;
-
-	public UIProperties m_UIProperties;
-
 	public Camera m_mainCamera;
 
-	public GameObject m_selected;
-	Cell m_selectedPos;
+	private Dictionary<Cell, List<GameObject>> m_originalObjects;
+	private Dictionary<Cell, List<GameObject>> m_playerPlacedObjects;
+	private Dictionary<int, List<int>> m_placementRules;
+
+	private UIProperties m_UIProperties;
 
 	void Awake ()
 	{
@@ -23,6 +21,29 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		m_originalObjects = new Dictionary<Cell, List<GameObject>>();
 		m_playerPlacedObjects = new Dictionary<Cell, List<GameObject>>();
 		if (!m_UIProperties) m_UIProperties = gameObject.GetComponent<UIProperties>();
+	}
+
+	void Start ()
+	{
+		// Here because it depends on CMJ2Manager.g
+		LoadPlacementRules();
+	}
+
+	protected void LoadPlacementRules ()
+	{
+		Dictionary<int, List<int>> map = new Dictionary<int, List<int>>();
+        string txt = System.IO.File.ReadAllText(Application.dataPath + "/Levels/config_tiles.json");
+        Hashtable configData = MiniJSON.jsonDecode(txt) as Hashtable;
+        foreach (Hashtable ruleData in (configData["placement_rules"] as ArrayList))
+        {
+        	int l = CMJ2Manager.g.GetTypeFromString(ruleData["name"] as string);
+        	map[l] = new List<int>();
+			foreach (string ruleDestData in (ruleData["cannot_place_on"] as ArrayList))
+			{
+				map[l].Add(CMJ2Manager.g.GetTypeFromString(ruleDestData));
+			}
+        }
+		m_placementRules = map;
 	}
 
 	public Cell WorldPosToCell (Vector3 pos)
@@ -98,6 +119,25 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		return null;
 	}
 
+	public GameObject GetOriginalObjectInCell (Cell cell)
+	{
+		if (m_originalObjects.ContainsKey(cell))
+		{
+			int len = m_originalObjects[cell].Count;
+			return (len > 0 ? m_originalObjects[cell][len - 1] : null);
+		}
+		return null;
+	}
+
+	public void RemoveOriginalObjectFromCell (GameObject obj, Cell cell)
+	{
+		if (m_originalObjects.ContainsKey(cell) &&
+			m_originalObjects[cell].Count > 0)
+		{
+			m_originalObjects[cell].Remove(obj);
+		}
+	}
+
 	public void RemovePlayerPlacedObjectFromCell (GameObject obj, Cell cell)
 	{
 		if (m_playerPlacedObjects.ContainsKey(cell) &&
@@ -105,7 +145,6 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		{
 			m_playerPlacedObjects[cell].Remove(obj);
 		}
-
 	}
 
 	public void AddPlayerPlacedObjectToCell (GameObject obj, Cell cell)
@@ -159,7 +198,7 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		return false;
 	}
 
-	public bool CanPlaceAt (GameObject obj, Cell cell)
+	public bool CanPlaceTypeAt (int type, Cell cell)
 	{
 		// TODO: Add special cases for any objects that must be placed on the ground
 
@@ -168,39 +207,9 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 			return false;
 		}
 
-		// No object can be placed on the gate
-    	if (DoesCellContainObjectType(cell, CMJ2Manager.LAYER_GATE))
-    	{
-			return false;
-		}
-
-		switch (obj.layer)
+		foreach (int objType in m_placementRules[type])
 		{
-		    case CMJ2Manager.LAYER_GROUND:
-    			if (DoesCellContainObjectType(cell, CMJ2Manager.LAYER_GROUND) ||
-    				DoesCellContainObjectType(cell, CMJ2Manager.LAYER_SPIKE))
-    			{
-    				return false;
-    			}
-		        break;
-
-		    case CMJ2Manager.LAYER_LADDER:
-		        if (DoesCellContainObjectType(cell, CMJ2Manager.LAYER_LADDER))
-		        {
-    				return false;
-    			}
-		        break;
-
-		    case CMJ2Manager.LAYER_SPIKE:
-    			if (DoesCellContainObjectType(cell, CMJ2Manager.LAYER_GROUND) ||
-    				DoesCellContainObjectType(cell, CMJ2Manager.LAYER_SPIKE))
-    			{
-    				return false;
-    			}
-		    	break;
-
-		    default:
-		        break;
+			if (DoesCellContainObjectType(cell, objType)) return false;
 		}
 
 		return true;
@@ -209,5 +218,43 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 	public void CreateDebugObjectAtCell (Cell cell)
 	{
 		Instantiate(m_debugObject, CellToWorldPos(cell), Quaternion.identity);
+	}
+
+	public void SerializeEnvironment ()
+	{
+		Hashtable hash = new Hashtable();
+		ArrayList objectList = new ArrayList();
+		ArrayList placeableObjectList = new ArrayList();
+		hash["objects"] = objectList;
+		hash["placeable_objects"] = placeableObjectList;
+		foreach (KeyValuePair<Cell, List<GameObject>> pair in m_originalObjects)
+		{
+			Cell cell = pair.Key;
+			Hashtable pos = new Hashtable();
+			pos["x"] = cell.X;
+			pos["y"] = cell.Y;
+			foreach (GameObject go in pair.Value) {
+				CMJ2Tile tile = go.GetComponent<CMJ2Tile>();
+				Hashtable obj = new Hashtable();
+				obj["name"] = tile.objectIdentifier;
+				obj["pos"] = pos;
+				objectList.Add(obj);
+			}
+		}
+		foreach (KeyValuePair<Cell, List<GameObject>> pair in m_playerPlacedObjects)
+		{
+			Cell cell = pair.Key;
+			Hashtable pos = new Hashtable();
+			pos["x"] = cell.X;
+			pos["y"] = cell.Y;
+			foreach (GameObject go in pair.Value) {
+				CMJ2Tile tile = go.GetComponent<CMJ2Tile>();
+				Hashtable obj = new Hashtable();
+				obj["name"] = tile.objectIdentifier;
+				obj["pos"] = pos;
+				placeableObjectList.Add(obj);
+			}
+		}
+		Debug.Log(MiniJSON.jsonEncode(hash));
 	}
 }

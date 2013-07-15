@@ -5,7 +5,9 @@ using System.Collections.Generic;
 public class CMJ2Tile : MonoBehaviour
 {
 	public bool m_moveable = false;
+	public bool m_mapOnStart = true; // TODO (Julian): Remove when all objects are loaded from a file rather than a scene
 
+	public string objectIdentifier;
 	public Vector2 dims;
 	public Vector2 cellAnchor;
 
@@ -24,18 +26,22 @@ public class CMJ2Tile : MonoBehaviour
 	}
 
 	void Start () {
-		if (m_moveable)
+		// TODO (Julian): Remove when all objects are loaded from a file rather than a scene
+		if (m_mapOnStart)
 		{
-			List<Cell> cells = EnumerateCells();
-			foreach (Cell cell in cells) {
-				CMJ2EnvironmentManager.g.AddPlayerPlacedObjectToCell(gameObject, cell);
+			if (m_moveable)
+			{
+				List<Cell> cells = EnumerateCells();
+				foreach (Cell cell in cells) {
+					CMJ2EnvironmentManager.g.AddPlayerPlacedObjectToCell(gameObject, cell);
+				}
 			}
-		}
-		else
-		{
-			List<Cell> cells = EnumerateCells();
-			foreach (Cell cell in cells) {
-				CMJ2EnvironmentManager.g.AddOriginalObjectToCell(gameObject, cell);
+			else
+			{
+				List<Cell> cells = EnumerateCells();
+				foreach (Cell cell in cells) {
+					CMJ2EnvironmentManager.g.AddOriginalObjectToCell(gameObject, cell);
+				}
 			}
 		}
 	}

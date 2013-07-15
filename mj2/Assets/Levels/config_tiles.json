@@ -1,5 +1,5 @@
 {
-  "constraints":
+  "placement_rules":
     [
       {
         "name": "LAYER_GROUND"
@@ -32,6 +32,35 @@
           , "LAYER_HERO"
           ]
       }
+    , {
+        "name": "LAYER_DIRECTIVE"
+      , "cannot_place_on":
+          [
+            "LAYER_DIRECTIVE"
+          ]
+      }
+    , {
+        "name": "LAYER_GATE"
+      , "cannot_place_on":
+          [
+            "LAYER_LADDER"
+          , "LAYER_GROUND"
+          , "LAYER_SPIKE"
+          , "LAYER_GATE"
+          , "LAYER_HERO"
+          ]
+      }
+    , {
+        "name": "LAYER_HERO"
+      , "cannot_place_on":
+          [
+            "LAYER_LADDER"
+          , "LAYER_GROUND"
+          , "LAYER_SPIKE"
+          , "LAYER_GATE"
+          , "LAYER_HERO"
+          ]
+      }
     ]
   , "objects":
     [
@@ -44,6 +73,42 @@
     , {
         "name": "Dirt Ground"
       , "resource_path": "Tile_Ground"
+      , "type": "LAYER_GROUND"
+      , "z_depth": 0.0
+      }
+    , {
+        "name": "Pipe Top"
+      , "resource_path": "Tile_Ground_Pipe_Top"
+      , "type": "LAYER_GROUND"
+      , "z_depth": 0.0
+      }
+    , {
+        "name": "Pipe"
+      , "resource_path": "Tile_Ground_Pipe"
+      , "type": "LAYER_GROUND"
+      , "z_depth": 0.0
+      }
+    , {
+        "name": "Pipe Middle"
+      , "resource_path": "Tile_Ground_Pipe_Middle"
+      , "type": "LAYER_GROUND"
+      , "z_depth": 0.0
+      }
+    , {
+        "name": "Girder Top"
+      , "resource_path": "Tile_Ground_Girder_Top"
+      , "type": "LAYER_GROUND"
+      , "z_depth": 0.0
+      }
+    , {
+        "name": "Girder Middle"
+      , "resource_path": "Tile_Ground_Girder_Middle"
+      , "type": "LAYER_GROUND"
+      , "z_depth": 0.0
+      }
+    , {
+        "name": "Ground X"
+      , "resource_path": "Tile_Ground_X"
       , "type": "LAYER_GROUND"
       , "z_depth": 0.0
       }
@@ -69,13 +134,13 @@
         "name": "Up Directive"
       , "resource_path": "Tile_Directive_Up"
       , "type": "LAYER_DIRECTIVE"
-      , "z_depth": -0.1
+      , "z_depth": 0.0
       }
     , {
         "name": "Change Dir Directive"
       , "resource_path": "Tile_Directive_Change_Dir"
       , "type": "LAYER_DIRECTIVE"
-      , "z_depth": -0.1
+      , "z_depth": 0.0
       }
     ]
 }
