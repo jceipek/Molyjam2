@@ -11,6 +11,22 @@ public class CMJ2Tile : MonoBehaviour
 	public Vector2 dims;
 	public Vector2 cellAnchor;
 
+	public List<Cell> EnumerateCellsFromBase (Cell baseCell) {
+		List<Cell> cells = new List<Cell>();
+
+		Vector3 worldPos = CMJ2EnvironmentManager.g.CellToWorldPos(baseCell);
+
+		for (int x = 0; x < dims.x; x++) {
+			for (int y = 0; y < dims.y; y++) {
+				Vector3 deltaDim = new Vector3(x + cellAnchor.x, y + cellAnchor.y);
+				Cell cell = CMJ2EnvironmentManager.g.WorldPosToCell(worldPos + deltaDim);
+				cells.Add(cell);
+			}
+		}
+
+		return cells;
+	}
+
 	public List<Cell> EnumerateCells () {
 		List<Cell> cells = new List<Cell>();
 

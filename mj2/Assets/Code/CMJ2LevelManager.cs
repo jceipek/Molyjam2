@@ -128,7 +128,8 @@ public class CMJ2LevelManager : MonoBehaviour
     public GameObject TryInstantiateObjectByNameInCell (string name, Cell cell)
     {
         CMJ2Object obj = new CMJ2Object (m_tileNameToConfigMap[name], cell);
-        if (CMJ2EnvironmentManager.g.CanPlaceTypeAt(obj.m_prefab.layer, cell))
+        CMJ2Tile tile = obj.m_prefab.GetComponent<CMJ2Tile>();
+        if (CMJ2EnvironmentManager.g.CanPlaceTileAt(tile, cell))
         {
             return GameObject.Instantiate(obj.m_prefab, obj.m_pos, Quaternion.identity) as GameObject;
         }
