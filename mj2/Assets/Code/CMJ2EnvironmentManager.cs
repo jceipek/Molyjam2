@@ -198,10 +198,23 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		return false;
 	}
 
-	public bool CanPlaceTypeAt (int type, Cell cell)
+	public bool CanPlaceTileAt (CMJ2Tile tile, Cell destCell)
 	{
 		// TODO: Add special cases for any objects that must be placed on the ground
+		List<Cell> cells = tile.EnumerateCellsFromBase(destCell);
+		int type = tile.gameObject.layer;
+		foreach (Cell cell in cells)
+		{
+			if (!CanPlaceTypeAt(type, cell))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 
+	private bool CanPlaceTypeAt (int type, Cell cell)
+	{
 		if (!IsCellPartOfInterface(cell))
 		{
 			return false;
