@@ -1,0 +1,426 @@
+{
+  "placeable_objects": [
+    {
+      "pos": {
+        "y": 9,
+        "x": 27
+      },
+      "name": "Metal Spikes"
+    }
+  ],
+  "objects": [
+    {
+      "pos": {
+        "y": 3,
+        "x": 3
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 4
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 5
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 6
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 7
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 8
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 9
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 10
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 11
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 12
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 13
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 14
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 15
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 16
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 17
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 18
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 19
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 3,
+        "x": 20
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 12,
+        "x": 3
+      },
+      "name": "Pipe Middle"
+    },
+    {
+      "pos": {
+        "y": 11,
+        "x": 3
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 10,
+        "x": 3
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 9,
+        "x": 3
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 8,
+        "x": 3
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 7,
+        "x": 3
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 6,
+        "x": 3
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 5,
+        "x": 3
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 4,
+        "x": 3
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 4,
+        "x": 20
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 5,
+        "x": 20
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 6,
+        "x": 20
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 7,
+        "x": 20
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 8,
+        "x": 20
+      },
+      "name": "Pipe Middle"
+    },
+    {
+      "pos": {
+        "y": 9,
+        "x": 20
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 10,
+        "x": 20
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 11,
+        "x": 20
+      },
+      "name": "Pipe Top"
+    },
+    {
+      "pos": {
+        "y": 6,
+        "x": 19
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 6,
+        "x": 18
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 6,
+        "x": 17
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 6,
+        "x": 16
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 6,
+        "x": 15
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 7,
+        "x": 17
+      },
+      "name": "Gate"
+    },
+    {
+      "pos": {
+        "y": 6,
+        "x": 11
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 6,
+        "x": 10
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 10,
+        "x": 4
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 10,
+        "x": 5
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 10,
+        "x": 6
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 10,
+        "x": 7
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 11,
+        "x": 6
+      },
+      "name": "Metal Spikes"
+    },
+    {
+      "pos": {
+        "y": 13,
+        "x": 3
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 14,
+        "x": 3
+      },
+      "name": "Pipe Top"
+    },
+    {
+      "pos": {
+        "y": 7,
+        "x": 10
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 8,
+        "x": 10
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 9,
+        "x": 10
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 10,
+        "x": 10
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 11,
+        "x": 10
+      },
+      "name": "Pipe"
+    },
+    {
+      "pos": {
+        "y": 12,
+        "x": 10
+      },
+      "name": "Pipe Top"
+    },
+    {
+      "pos": {
+        "y": 4,
+        "x": 13
+      },
+      "name": "Up Directive"
+    },
+    {
+      "pos": {
+        "y": 6,
+        "x": 12
+      },
+      "name": "Dirt Ground"
+    },
+    {
+      "pos": {
+        "y": 7,
+        "x": 11
+      },
+      "name": "Change Dir Directive"
+    }
+  ]
+}

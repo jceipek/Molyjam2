@@ -45,7 +45,7 @@ public class UIController : MonoBehaviour {
 	 				m_selected = CMJ2EnvironmentManager.g.GetPlayerPlacedObjectInCell(cell);
 	 				if (m_selected)
 	 				{
-	 					CMJ2EnvironmentManager.g.RemovePlayerPlacedObjectFromCell(m_selected, cell);
+	 					CMJ2EnvironmentManager.g.RemovePlayerPlacedObjectFromMemory(m_selected);
 	 					// TODO: remove large objects from multiple cells
 	 				}
 	 			}

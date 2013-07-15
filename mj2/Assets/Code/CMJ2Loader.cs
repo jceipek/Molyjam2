@@ -13,6 +13,8 @@ public class CMJ2Loader : MonoBehaviour
     public List<string> m_levelList;
     public int m_currentLevel;
 
+    private CMJ2LevelData m_dataForNextLevel;
+
     protected Dictionary<string, CMJ2TileConfig> m_tileNameToConfigMap;
 
 	void Awake ()
@@ -49,15 +51,17 @@ public class CMJ2Loader : MonoBehaviour
         }
     }
 
-    public void loadLevel (int levelIndex)
+    public CMJ2LevelData loadLevel (int levelIndex)
     {
-        float start = Time.realtimeSinceStartup;
         string txt = System.IO.File.ReadAllText(Application.dataPath + m_levelList[levelIndex]);
-        CMJ2LevelData test = CMJ2LevelManager.g.CreateLevelDataFromJSONString(txt);
+        CMJ2LevelData data = CMJ2LevelManager.g.CreateLevelDataFromJSONString(txt);
+        return data;
     }
 
     void Start ()
     {
+        m_dataForNextLevel = loadLevel(m_currentLevel);
+        createLevelFromData(m_dataForNextLevel);
         //m_tileNameToConfigMap = tileConfig();
         //loadLevel(0);
         //string txt = System.IO.File.ReadAllText(Application.dataPath + "/Levels/level1.json");
