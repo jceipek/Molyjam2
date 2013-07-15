@@ -129,7 +129,16 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		return null;
 	}
 
-	public void RemoveOriginalObjectFromCell (GameObject obj, Cell cell)
+	public void RemoveOriginalObjectFromMemory (GameObject obj)
+	{
+		CMJ2Tile tile = obj.GetComponent<CMJ2Tile>();
+		foreach (Cell cell in tile.EnumerateCellsFromBase())
+		{
+			RemoveOriginalObjectFromCell(obj, cell);
+		}
+	}
+
+	private void RemoveOriginalObjectFromCell (GameObject obj, Cell cell)
 	{
 		if (m_originalObjects.ContainsKey(cell) &&
 			m_originalObjects[cell].Count > 0)
@@ -138,7 +147,16 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 		}
 	}
 
-	public void RemovePlayerPlacedObjectFromCell (GameObject obj, Cell cell)
+	public void RemovePlayerPlacedObjectFromMemory (GameObject obj)
+	{
+		CMJ2Tile tile = obj.GetComponent<CMJ2Tile>();
+		foreach (Cell cell in tile.EnumerateCellsFromBase())
+		{
+			RemovePlayerPlacedObjectFromCell(obj, cell);
+		}
+	}
+
+	private void RemovePlayerPlacedObjectFromCell (GameObject obj, Cell cell)
 	{
 		if (m_playerPlacedObjects.ContainsKey(cell) &&
 			m_playerPlacedObjects[cell].Count > 0)
@@ -201,7 +219,7 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 	public bool CanPlaceTileAt (CMJ2Tile tile, Cell destCell)
 	{
 		// TODO: Add special cases for any objects that must be placed on the ground
-		List<Cell> cells = tile.EnumerateCellsFromBase(destCell);
+		List<Cell> cells = tile.EnumerateCellsAroundCell(destCell);
 		int type = tile.gameObject.layer;
 		foreach (Cell cell in cells)
 		{
@@ -248,10 +266,13 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 			pos["y"] = cell.Y;
 			foreach (GameObject go in pair.Value) {
 				CMJ2Tile tile = go.GetComponent<CMJ2Tile>();
-				Hashtable obj = new Hashtable();
-				obj["name"] = tile.objectIdentifier;
-				obj["pos"] = pos;
-				objectList.Add(obj);
+				if (tile.GetBaseCell().Equals(cell))
+				{
+					Hashtable obj = new Hashtable();
+					obj["name"] = tile.m_objectIdentifier;
+					obj["pos"] = pos;
+					objectList.Add(obj);
+				}
 			}
 		}
 		foreach (KeyValuePair<Cell, List<GameObject>> pair in m_playerPlacedObjects)
@@ -262,10 +283,13 @@ public class CMJ2EnvironmentManager : MonoBehaviour {
 			pos["y"] = cell.Y;
 			foreach (GameObject go in pair.Value) {
 				CMJ2Tile tile = go.GetComponent<CMJ2Tile>();
-				Hashtable obj = new Hashtable();
-				obj["name"] = tile.objectIdentifier;
-				obj["pos"] = pos;
-				placeableObjectList.Add(obj);
+				if (tile.GetBaseCell().Equals(cell))
+				{
+					Hashtable obj = new Hashtable();
+					obj["name"] = tile.m_objectIdentifier;
+					obj["pos"] = pos;
+					placeableObjectList.Add(obj);
+				}
 			}
 		}
 		Debug.Log(MiniJSON.jsonEncode(hash));

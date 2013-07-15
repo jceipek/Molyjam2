@@ -95,13 +95,20 @@ public class CMJ2Editor : MonoBehaviour
             {
                 if (origObjInCell)
                 {
-                    CMJ2EnvironmentManager.g.RemoveOriginalObjectFromCell(origObjInCell, cell);
-                    Destroy(origObjInCell);
+                    CMJ2EnvironmentManager.g.RemoveOriginalObjectFromMemory(origObjInCell);
+                    if (origObjInCell)
+                    {
+                        Destroy(origObjInCell);
+                    }
+
                 }
                 else if (playerObjInCell)
                 {
-                    CMJ2EnvironmentManager.g.RemovePlayerPlacedObjectFromCell(playerObjInCell, cell);
-                    Destroy(playerObjInCell);
+                    CMJ2EnvironmentManager.g.RemovePlayerPlacedObjectFromMemory(playerObjInCell);
+                    if (playerObjInCell)
+                    {
+                        Destroy(playerObjInCell);
+                    }
                 }
             }
             else if (CMJ2EnvironmentManager.g.IsCellPartOfInterface(cell))

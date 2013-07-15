@@ -46,9 +46,14 @@ public class CMJ2Object
         {
             CMJ2TileConfig config = configInfo[name];
             m_prefab = config.m_prefab;
+            CMJ2Tile tile = m_prefab.GetComponent<CMJ2Tile>();
             m_cell = new Cell((int)((double)(data["pos"] as Hashtable)["x"]),
                               (int)((double)(data["pos"] as Hashtable)["y"]));
             m_pos = CMJ2EnvironmentManager.g.CellToWorldPos(m_cell, config.m_zDepth);
+            if (tile)
+            {
+                m_pos -= new Vector3(tile.m_cellAnchor.x, tile.m_cellAnchor.y);
+            }
         }
         else
         {
@@ -76,16 +81,27 @@ public class CMJ2LevelData
     {
         Hashtable lvlData = MiniJSON.jsonDecode(data) as Hashtable;
         m_levelName = lvlData["name"] as string;
-        m_directive_count = (int)((double)lvlData["directive_count"]);
+        //m_directive_count = (int)((double)lvlData["directive_count"]);
+        m_directive_count = 0;
         m_originalObjects = new List<CMJ2Object>();
         m_placeableObjects = new List<CMJ2Object>();
         foreach (Hashtable obj in (lvlData["objects"] as ArrayList))
         {
-            m_originalObjects.Add(new CMJ2Object(obj, configInfo));
+            CMJ2Object preparedObject = new CMJ2Object(obj, configInfo);
+            if (preparedObject.m_prefab.layer == CMJ2Manager.LAYER_DIRECTIVE)
+            {
+                m_directive_count++;
+            }
+            m_originalObjects.Add(preparedObject);
         }
         foreach (Hashtable obj in (lvlData["placeable_objects"] as ArrayList))
         {
-            m_placeableObjects.Add(new CMJ2Object(obj, configInfo));
+            CMJ2Object preparedObject = new CMJ2Object(obj, configInfo);
+            if (preparedObject.m_prefab.layer == CMJ2Manager.LAYER_DIRECTIVE)
+            {
+                m_directive_count++;
+            }
+            m_placeableObjects.Add(preparedObject);
         }
     }
 }
