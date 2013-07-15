@@ -26,10 +26,7 @@ public class CMJ2Editor : MonoBehaviour
     {
         m_objectNames = CMJ2LevelManager.g.EnumerateObjectNames();
         Debug.Log("Editor Instructions:");
-        Debug.Log("Click and drag to add objects");
-        Debug.Log("Hold alt while clicking to delete objects");
-        Debug.Log("Cycle through objects by pressing the U/D arrows or using the scroll wheel");
-        Debug.Log("Save JSON to console by pressing 's'");
+
 
         FloatingObjectInCell(m_objectNames[m_selectedIndex], new Cell(0,0));
     }

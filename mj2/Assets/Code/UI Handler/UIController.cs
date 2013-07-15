@@ -19,7 +19,8 @@ public class UIController : MonoBehaviour {
 
 			if (m_selected)
 			{
-				if (CMJ2EnvironmentManager.g.CanPlaceTypeAt(m_selected.layer, cell))
+				CMJ2Tile tile = m_selected.GetComponent<CMJ2Tile>();
+				if (CMJ2EnvironmentManager.g.CanPlaceTileAt(tile, cell))
 				{
 					print("can place");
 				}
